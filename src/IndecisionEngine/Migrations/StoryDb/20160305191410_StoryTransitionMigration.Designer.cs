@@ -8,25 +8,14 @@ using IndecisionEngine.Models;
 namespace IndecisionEngine.Migrations.StoryDb
 {
     [DbContext(typeof(StoryDbContext))]
-    partial class StoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160305191410_StoryTransitionMigration")]
+    partial class StoryTransitionMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("IndecisionEngine.Controllers.StorySeed", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("StoryEntryId");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-                });
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryChoice", b =>
                 {
@@ -57,13 +46,28 @@ namespace IndecisionEngine.Migrations.StoryDb
 
                     b.Property<string>("Effects");
 
-                    b.Property<int?>("NextEntryId");
+                    b.Property<long?>("NextEntryId");
 
                     b.Property<string>("Preconditions");
 
-                    b.Property<int?>("PriorEntryId");
+                    b.Property<long?>("PriorEntryId");
 
                     b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("IndecisionEngine.Models.StoryTransition", b =>
+                {
+                    b.HasOne("IndecisionEngine.Models.StoryChoice")
+                        .WithMany()
+                        .HasForeignKey("ChoiceId");
+
+                    b.HasOne("IndecisionEngine.Models.StoryEntry")
+                        .WithMany()
+                        .HasForeignKey("NextEntryId");
+
+                    b.HasOne("IndecisionEngine.Models.StoryEntry")
+                        .WithMany()
+                        .HasForeignKey("PriorEntryId");
                 });
         }
     }

@@ -1,0 +1,50 @@
+@model IndecisionEngine.Models.StoryTransition
+
+@{
+    ViewData["Title"] = "Details";
+    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
+    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>StoryTransition</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PriorEntryId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => entries.FirstOrDefault(entry => entry.Id == model.PriorEntryId).Body)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Preconditions)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Preconditions)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ChoiceId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => choices.FirstOrDefault(choice => choice.Id == model.ChoiceId).Body)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Effects)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Effects)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NextEntryId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => entries.FirstOrDefault(entry => entry.Id == model.NextEntryId).Body)
+        </dd>
+    </dl>
+</div>
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</p>

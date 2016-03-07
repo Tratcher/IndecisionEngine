@@ -8,9 +8,10 @@ using IndecisionEngine.Models;
 namespace IndecisionEngine.Migrations.StoryDb
 {
     [DbContext(typeof(StoryDbContext))]
-    partial class StoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160307013637_StorySeeds")]
+    partial class StorySeeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")

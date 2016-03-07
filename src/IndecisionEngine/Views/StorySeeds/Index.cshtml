@@ -1,0 +1,40 @@
+@model IEnumerable<IndecisionEngine.Models.StorySeed>
+
+@{
+    ViewData["Title"] = "Index";
+    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StoryEntryId)
+        </th>
+        <th></th>
+    </tr>
+    
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => entries.FirstOrDefault(entry => entry.Id == item.StoryEntryId).Body)
+        </td>
+        <td>
+            <a asp-controller="StoryExplorer" asp-route-id="@item.StoryEntryId">Read</a> |
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+    </tr>
+}
+</table>

@@ -1,0 +1,68 @@
+@model IndecisionEngine.Models.StoryTransition
+
+@{
+    ViewData["Title"] = "Edit";
+    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
+    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>StoryTransition</h4>
+        <hr />
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="PriorEntryId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PriorEntryId, new SelectList(entries, "Id", "Body"), "")
+                <span asp-validation-for="PriorEntryId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Preconditions" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Preconditions" class="form-control" />
+                <span asp-validation-for="Preconditions" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ChoiceId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ChoiceId, new SelectList(choices, "Id", "Body"), "")
+                <span asp-validation-for="ChoiceId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Effects" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Effects" class="form-control" />
+                <span asp-validation-for="Effects" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="NextEntryId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.NextEntryId, new SelectList(entries, "Id", "Body"), "")
+                <span asp-validation-for="NextEntryId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

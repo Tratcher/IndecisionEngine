@@ -8,25 +8,14 @@ using IndecisionEngine.Models;
 namespace IndecisionEngine.Migrations.StoryDb
 {
     [DbContext(typeof(StoryDbContext))]
-    partial class StoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160307001654_StoryEntries")]
+    partial class StoryEntries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("IndecisionEngine.Controllers.StorySeed", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("StoryEntryId");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-                });
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryChoice", b =>
                 {
