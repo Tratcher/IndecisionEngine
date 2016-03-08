@@ -11,7 +11,7 @@
 <form asp-action="SaveTransition">
     <div class="form-horizontal">
         <hr />
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" name="Id" value="@Model.Id" />
         <input type="hidden" asp-for="PriorEntryId" />
         <div class="form-group">
             <label asp-for="PriorEntryId" class="col-md-2 control-label"></label>
