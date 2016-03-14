@@ -1,8 +1,7 @@
 using System.Linq;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Data.Entity;
+using System.Threading.Tasks;
 using IndecisionEngine.Models;
+using Microsoft.AspNet.Mvc;
 
 namespace IndecisionEngine.Controllers
 {
@@ -50,10 +49,18 @@ namespace IndecisionEngine.Controllers
         // POST: StorySeeds/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(StorySeed storySeed)
+        public async Task<IActionResult> Create(StorySeed storySeed, string newEntry)
         {
             if (ModelState.IsValid)
             {
+                if (!storySeed.StoryEntryId.HasValue && !string.IsNullOrEmpty(newEntry))
+                {
+                    var entry = new StoryEntry() { Body = newEntry };
+                    _context.StoryEntries.Add(entry);
+                    await _context.SaveChangesAsync();
+                    storySeed.StoryEntryId = entry.Id;
+                }
+
                 _context.StorySeed.Add(storySeed);
                 _context.SaveChanges();
                 return RedirectToAction("Index");

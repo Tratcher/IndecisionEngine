@@ -11,6 +11,7 @@
 <form asp-action="SaveTransition">
     <div class="form-horizontal">
         <hr />
+        <!--TODO: Why did asp-for="Id" keep giving me the wrong value? Even when the right value showed in the debugger-->
         <input type="hidden" name="Id" value="@Model.Id" />
         <input type="hidden" asp-for="PriorEntryId" />
         <div class="form-group">
@@ -34,6 +35,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-md-2 control-label">or a new choice</label>
+            <div class="col-md-10">
+                <input type="text" id="newChoice" name="newChoice" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="Effects" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="Effects" class="form-control" />
@@ -45,6 +52,12 @@
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.NextEntryId, new SelectList(entries, "Id", "Body"), "")
                 <span asp-validation-for="NextEntryId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">or a new entry</label>
+            <div class="col-md-10">
+                <input type="text" id="newEntry" name="newEntry" class="form-control" />
             </div>
         </div>
         <div class="form-group">

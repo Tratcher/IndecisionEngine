@@ -23,7 +23,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryEntries/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -60,7 +60,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryEntries/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -91,7 +91,7 @@ namespace IndecisionEngine.Controllers
 
         // GET: StoryEntries/Delete/5
         [ActionName("Delete")]
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -110,7 +110,7 @@ namespace IndecisionEngine.Controllers
         // POST: StoryEntries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             StoryEntry storyEntry = await _context.StoryEntries.SingleAsync(m => m.Id == id);
             _context.StoryEntries.Remove(storyEntry);

@@ -16,18 +16,6 @@ namespace IndecisionEngine.Migrations.StoryDb
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("IndecisionEngine.Controllers.StorySeed", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("StoryEntryId");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-                });
-
             modelBuilder.Entity("IndecisionEngine.Models.StoryChoice", b =>
                 {
                     b.Property<int>("Id")
@@ -40,10 +28,22 @@ namespace IndecisionEngine.Migrations.StoryDb
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryEntry", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Body");
+
+                    b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("IndecisionEngine.Models.StorySeed", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("StoryEntryId");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
                 });
