@@ -116,5 +116,13 @@ namespace IndecisionEngine.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        [HttpPost, ActionName("DeleteAll")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteAll()
+        {
+            _context.Database.ExecuteSqlCommand("delete from StoryChoice");
+            return View("Index", _context.StoryChoice.ToList());
+        }
     }
 }

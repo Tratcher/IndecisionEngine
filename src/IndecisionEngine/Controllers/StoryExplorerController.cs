@@ -24,7 +24,7 @@ namespace IndecisionEngine.Controllers
 
             ViewData["transitions"] = _context.StoryTransition.Where(transition => transition.PriorEntryId == id);
             ViewData["choices"] = _context.StoryChoice;
-            return View(_context.StoryEntries.FirstOrDefault(entry => entry.Id == id));
+            return View(_context.StoryEntry.FirstOrDefault(entry => entry.Id == id));
         }
 
         public IActionResult NewTransition(int? id)
@@ -39,7 +39,7 @@ namespace IndecisionEngine.Controllers
                 _context.StoryTransition.Add(transition);
                 _context.SaveChanges();
 
-                ViewData["entries"] = _context.StoryEntries;
+                ViewData["entries"] = _context.StoryEntry;
                 ViewData["choices"] = _context.StoryChoice;
                 return View("NewTransition", transition);
             }
@@ -60,7 +60,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             ViewData["choices"] = _context.StoryChoice;
             return View("NewTransition", storyTransition);
         }
@@ -81,7 +81,7 @@ namespace IndecisionEngine.Controllers
                 if (!storyTransition.NextEntryId.HasValue && !string.IsNullOrEmpty(newEntry))
                 {
                     var entry = new StoryEntry() { Body = newEntry };
-                    _context.StoryEntries.Add(entry);
+                    _context.StoryEntry.Add(entry);
                     await _context.SaveChangesAsync();
                     storyTransition.NextEntryId = entry.Id;
                 }

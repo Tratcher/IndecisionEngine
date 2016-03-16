@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Data.Entity;
 
 namespace IndecisionEngine.Controllers
 {
@@ -17,7 +18,7 @@ namespace IndecisionEngine.Controllers
         // GET: StorySeeds
         public IActionResult Index()
         {
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             return View(_context.StorySeed.ToList());
         }
 
@@ -35,14 +36,14 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             return View(storySeed);
         }
 
         // GET: StorySeeds/Create
         public IActionResult Create()
         {
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             return View();
         }
 
@@ -56,7 +57,7 @@ namespace IndecisionEngine.Controllers
                 if (!storySeed.StoryEntryId.HasValue && !string.IsNullOrEmpty(newEntry))
                 {
                     var entry = new StoryEntry() { Body = newEntry };
-                    _context.StoryEntries.Add(entry);
+                    _context.StoryEntry.Add(entry);
                     await _context.SaveChangesAsync();
                     storySeed.StoryEntryId = entry.Id;
                 }
@@ -82,7 +83,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             return View(storySeed);
         }
 
@@ -115,7 +116,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             return View(storySeed);
         }
 
@@ -128,6 +129,14 @@ namespace IndecisionEngine.Controllers
             _context.StorySeed.Remove(storySeed);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost, ActionName("DeleteAll")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteAll()
+        {
+            _context.Database.ExecuteSqlCommand("delete from StorySeed");
+            return View("Index", _context.StorySeed.ToList());
         }
     }
 }

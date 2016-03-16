@@ -18,7 +18,7 @@ namespace IndecisionEngine.Controllers
         // GET: StoryTransitions
         public IActionResult Index()
         {
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             ViewData["choices"] = _context.StoryChoice;
             return View(_context.StoryTransition.ToList());
         }
@@ -37,7 +37,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             ViewData["choices"] = _context.StoryChoice;
             return View(storyTransition);
         }
@@ -45,7 +45,7 @@ namespace IndecisionEngine.Controllers
         // GET: StoryTransitions/Create
         public IActionResult Create()
         {
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             ViewData["choices"] = _context.StoryChoice;
             return View();
         }
@@ -78,7 +78,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             ViewData["choices"] = _context.StoryChoice;
             return View(storyTransition);
         }
@@ -112,7 +112,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntries;
+            ViewData["entries"] = _context.StoryEntry;
             ViewData["choices"] = _context.StoryChoice;
             return View(storyTransition);
         }
@@ -126,6 +126,14 @@ namespace IndecisionEngine.Controllers
             _context.StoryTransition.Remove(storyTransition);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost, ActionName("DeleteAll")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteAll()
+        {
+            _context.Database.ExecuteSqlCommand("delete from StoryTransition");
+            return View("Index", _context.StoryTransition.ToList());
         }
     }
 }

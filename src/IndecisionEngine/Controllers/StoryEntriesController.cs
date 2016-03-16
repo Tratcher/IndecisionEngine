@@ -19,7 +19,7 @@ namespace IndecisionEngine.Controllers
         // GET: StoryEntries
         public async Task<IActionResult> Index()
         {
-            return View(await _context.StoryEntries.ToListAsync());
+            return View(await _context.StoryEntry.ToListAsync());
         }
 
         // GET: StoryEntries/Details/5
@@ -30,7 +30,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            StoryEntry storyEntry = await _context.StoryEntries.SingleAsync(m => m.Id == id);
+            StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
             if (storyEntry == null)
             {
                 return HttpNotFound();
@@ -52,7 +52,7 @@ namespace IndecisionEngine.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.StoryEntries.Add(storyEntry);
+                _context.StoryEntry.Add(storyEntry);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -67,7 +67,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            StoryEntry storyEntry = await _context.StoryEntries.SingleAsync(m => m.Id == id);
+            StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
             if (storyEntry == null)
             {
                 return HttpNotFound();
@@ -98,7 +98,7 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            StoryEntry storyEntry = await _context.StoryEntries.SingleAsync(m => m.Id == id);
+            StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
             if (storyEntry == null)
             {
                 return HttpNotFound();
@@ -112,10 +112,18 @@ namespace IndecisionEngine.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            StoryEntry storyEntry = await _context.StoryEntries.SingleAsync(m => m.Id == id);
-            _context.StoryEntries.Remove(storyEntry);
+            StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
+            _context.StoryEntry.Remove(storyEntry);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost, ActionName("DeleteAll")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteAll()
+        {
+            _context.Database.ExecuteSqlCommand("delete from StoryEntry");
+            return View("Index", _context.StoryEntry.ToList());
         }
     }
 }

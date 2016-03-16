@@ -10,7 +10,7 @@ namespace IndecisionEngine.Models
 {
     public class StoryDbContext : DbContext
     {
-        public DbSet<StoryEntry> StoryEntries { get; set; }
+        public DbSet<StoryEntry> StoryEntry { get; set; }
         public DbSet<StoryChoice> StoryChoice { get; set; }
         public DbSet<StoryTransition> StoryTransition { get; set; }
         public DbSet<StorySeed> StorySeed { get; set; }
