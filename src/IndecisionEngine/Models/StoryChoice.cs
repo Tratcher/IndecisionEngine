@@ -8,6 +8,7 @@ namespace IndecisionEngine.Models
     public class StoryChoice
     {
         public int Id { get; set; }
+
         public string Body { get; set; }
     }
 }
