@@ -8,9 +8,6 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <tr>
         <th>
@@ -57,7 +54,11 @@
 }
 </table>
 <hr />
-<form asp-action="DeleteAll">
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<hr />
+<form asp-action="DeleteAll" style="margin-left: 15px">
     <div class="form-horizontal">
         <div class="form-group">
             <div>
