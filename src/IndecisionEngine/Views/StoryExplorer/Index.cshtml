@@ -12,6 +12,7 @@
 <p>
     @Model.Body
 </p>
+<a asp-controller="StoryEntries" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> 
 <h3>Choices:</h3>
 <table class="table">
 
@@ -42,5 +43,5 @@
     }
 </table>
 <p>
-    <a asp-action="NewTransition" asp-route-id="@Model.Id">Create New</a>
+    <a asp-action="NewTransition" asp-route-id="@Model.Id">New Choice</a>
 </p>
