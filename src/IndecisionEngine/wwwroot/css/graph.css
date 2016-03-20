@@ -1,0 +1,10 @@
+﻿.node>rect {
+ fill:white;
+ stroke:black;
+}
+.label {
+ color:black;
+}
+path {
+ stroke:blue;
+}

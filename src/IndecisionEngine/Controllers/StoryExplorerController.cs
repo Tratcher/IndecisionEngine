@@ -27,6 +27,19 @@ namespace IndecisionEngine.Controllers
             return View(_context.StoryEntry.FirstOrDefault(entry => entry.Id == id));
         }
 
+        public IActionResult Graph(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("Index", "StorySeeds");
+            }
+
+            ViewData["entries"] = _context.StoryEntry;
+            ViewData["transitions"] = _context.StoryTransition;
+            ViewData["choices"] = _context.StoryChoice;
+            return View(_context.StorySeed.FirstOrDefault(entry => entry.Id == id));
+        }
+
         public IActionResult NewTransition(int? id)
         {
             if (ModelState.IsValid)

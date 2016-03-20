@@ -1,0 +1,46 @@
+@model IndecisionEngine.Models.StorySeed
+
+@{
+    ViewData["Title"] = "Story Graph";
+    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
+    var transitions = (IEnumerable<StoryTransition>)ViewData["transitions"];
+    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
+
+    // http://knsv.github.io/mermaid/flowchart.html
+    // TODO: CSS styling. --> renders a white line on white background. Similarly -- text -->
+    var builder = new StringBuilder();
+    builder.AppendLine("graph TD");
+    builder.AppendLine($"Seed({Model.Title})");
+    builder.AppendLine($"Seed-->E{Model.StoryEntryId}");
+
+    foreach (var entry in entries)
+    {
+        builder.AppendLine($"E{entry.Id}({entry.Body})");
+
+    }
+
+    var linkCount = 0;
+    foreach (var transition in transitions)
+    {
+        var choice = choices.FirstOrDefault(c => c.Id == transition.ChoiceId);
+        builder.AppendLine($"E{transition.PriorEntryId}-- {choice.Body} -->E{transition.NextEntryId}");
+        // builder.AppendLine($"E{transition.PriorEntryId}-.->T{transition.Id}({choice.Body})");
+        // builder.AppendLine($"T{transition.Id}({choice.Body})-.->E{transition.NextEntryId}");
+
+        linkCount++;
+        // builder.AppendLine($"linkStyle {linkCount} color:black;");
+    }
+
+    var graph = builder.ToString();
+}
+
+<!--<h2>Index</h2> TODO: Title-->
+
+<!--TODO: <environment names="Development"> See _Layout.cshtml-->
+<link rel="stylesheet" type="text/css" href="~/css/graph.css">
+<script src="~/lib/mermaid/dist/mermaid.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<div class="mermaid">
+    @graph
+</div>
