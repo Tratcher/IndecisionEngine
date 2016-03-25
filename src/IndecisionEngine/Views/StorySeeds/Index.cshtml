@@ -12,7 +12,7 @@
             @Html.DisplayNameFor(model => model.Seeds.FirstOrDefault().Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Seeds.FirstOrDefault().StoryEntryId)
+            @Html.DisplayNameFor(model => model.Seeds.FirstOrDefault().FirstEntryId)
         </th>
         <th></th>
     </tr>
@@ -23,10 +23,10 @@
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(entry => entry.Id == item.StoryEntryId).Body)
+            @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(entry => entry.Id == item.FirstEntryId).Body)
         </td>
         <td>
-            <a asp-controller="StoryExplorer" asp-route-id="@item.StoryEntryId">Read</a> |
+            <a asp-controller="StoryExplorer" asp-route-id="@item.FirstEntryId">Read</a> |
             <a asp-controller="StoryExplorer" asp-action="Graph" asp-route-id="@item.Id">Graph</a> |
             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
             <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

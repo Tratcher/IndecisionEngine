@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.StoryExplorer;
+using IndecisionEngine.ViewModels.StoryTransitions;
 using Microsoft.AspNet.Mvc;
 
 namespace IndecisionEngine.Controllers
@@ -58,23 +59,15 @@ namespace IndecisionEngine.Controllers
         {
             if (ModelState.IsValid)
             {
-                var transition = new StoryTransition()
+                var viewModel = new StoryTransitionViewModel()
                 {
                     PriorEntryId = id,
-                };
-
-                _context.StoryTransition.Add(transition);
-                _context.SaveChanges();
-
-                var transitionView = new NewTransitionViewModel()
-                {
-                    Id = transition.Id,
-                    PriorEntryId = transition.PriorEntryId,
-                    Entries = _context.StoryEntry,
+                    PriorEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == id)?.Body,
                     Choices = _context.StoryChoice,
+                    Entries = _context.StoryEntry,
                 };
 
-                return View("NewTransition", transitionView);
+                return View("EditTransition", viewModel);
             }
 
             return new HttpStatusCodeResult(400);
@@ -93,9 +86,14 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["choices"] = _context.StoryChoice;
-            return View("NewTransition", storyTransition);
+            var viewModel = new StoryTransitionViewModel(storyTransition)
+            {
+                PriorEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storyTransition.PriorEntryId)?.Body,
+                Choices = _context.StoryChoice,
+                Entries = _context.StoryEntry,
+            };
+
+            return View("EditTransition", viewModel);
         }
 
         [HttpPost]
@@ -119,7 +117,15 @@ namespace IndecisionEngine.Controllers
                     storyTransition.NextEntryId = entry.Id;
                 }
 
-                _context.Update(storyTransition);
+                if (_context.StoryTransition.Any(t => t.Id == storyTransition.Id))
+                {
+                    _context.Update(storyTransition);
+                }
+                else
+                {
+                    _context.StoryTransition.Add(storyTransition);
+                }
+
                 _context.SaveChanges();
                 /* This really depends on weither you like depth or bredth first story creation.
                 if (storyTransition.NextEntryId.HasValue)

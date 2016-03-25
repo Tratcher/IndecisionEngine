@@ -7,7 +7,7 @@
     var builder = new StringBuilder();
     builder.AppendLine("graph TD");
     builder.AppendLine($"Seed({Model.Seed.Title})");
-    builder.AppendLine($"Seed-->E{Model.Seed.StoryEntryId}");
+    builder.AppendLine($"Seed-->E{Model.Seed.FirstEntryId}");
 
     foreach (var entry in Model.Entries)
     {

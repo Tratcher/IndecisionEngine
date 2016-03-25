@@ -42,12 +42,9 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            var viewModel = new StorySeedViewModel()
+            var viewModel = new StorySeedViewModel(storySeed)
             {
-                Id = storySeed.Id,
-                Title = storySeed.Title,
-                StoryEntryId = storySeed.StoryEntryId,
-                FirstEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storySeed.StoryEntryId)?.Body
+                FirstEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storySeed.FirstEntryId)?.Body
             };
 
             return View(viewModel);
@@ -66,12 +63,12 @@ namespace IndecisionEngine.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!storySeed.StoryEntryId.HasValue && !string.IsNullOrEmpty(newEntry))
+                if (!storySeed.FirstEntryId.HasValue && !string.IsNullOrEmpty(newEntry))
                 {
                     var entry = new StoryEntry() { Body = newEntry };
                     _context.StoryEntry.Add(entry);
                     await _context.SaveChangesAsync();
-                    storySeed.StoryEntryId = entry.Id;
+                    storySeed.FirstEntryId = entry.Id;
                 }
 
                 _context.StorySeed.Add(storySeed);
@@ -95,11 +92,8 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            var viewModel = new StorySeedViewModel()
+            var viewModel = new StorySeedViewModel(storySeed)
             {
-                Id = storySeed.Id,
-                Title = storySeed.Title,
-                StoryEntryId = storySeed.StoryEntryId,
                 Entries = _context.StoryEntry,
             };
 
@@ -135,12 +129,9 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            var viewModel = new StorySeedViewModel()
+            var viewModel = new StorySeedViewModel(storySeed)
             {
-                Id = storySeed.Id,
-                Title = storySeed.Title,
-                StoryEntryId = storySeed.StoryEntryId,
-                FirstEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storySeed.StoryEntryId)?.Body,
+                FirstEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storySeed.FirstEntryId)?.Body,
             };
 
             return View(viewModel);

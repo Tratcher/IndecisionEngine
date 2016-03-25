@@ -13,6 +13,6 @@ namespace IndecisionEngine.Models
         public string Title { get; set; }
 
         [Display(Name = "First Entry")]
-        public int? StoryEntryId { get; set; }
+        public int? FirstEntryId { get; set; }
     }
 }

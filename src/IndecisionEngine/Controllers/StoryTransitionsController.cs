@@ -3,6 +3,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using IndecisionEngine.Models;
+using IndecisionEngine.ViewModels.StoryTransitions;
 
 namespace IndecisionEngine.Controllers
 {
@@ -18,9 +19,14 @@ namespace IndecisionEngine.Controllers
         // GET: StoryTransitions
         public IActionResult Index()
         {
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["choices"] = _context.StoryChoice;
-            return View(_context.StoryTransition.ToList());
+            var viewModel = new StoryTransitionsIndexViewModel()
+            {
+                Transitions = _context.StoryTransition,
+                Entries = _context.StoryEntry,
+                Choices = _context.StoryChoice,
+            };
+
+            return View(viewModel);
         }
 
         // GET: StoryTransitions/Details/5
@@ -37,17 +43,26 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["choices"] = _context.StoryChoice;
-            return View(storyTransition);
+            var viewModel = new StoryTransitionViewModel(storyTransition)
+            {
+                PriorEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storyTransition.PriorEntryId)?.Body,
+                Choice = _context.StoryChoice.FirstOrDefault(choice => choice.Id == storyTransition.ChoiceId)?.Body,
+                NextEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storyTransition.NextEntryId)?.Body,
+            };
+
+            return View(viewModel);
         }
 
         // GET: StoryTransitions/Create
         public IActionResult Create()
         {
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["choices"] = _context.StoryChoice;
-            return View();
+            var viewModel = new StoryTransitionViewModel()
+            {
+                Choices = _context.StoryChoice,
+                Entries = _context.StoryEntry,
+            };
+
+            return View(viewModel);
         }
 
         // POST: StoryTransitions/Create
@@ -78,9 +93,13 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["choices"] = _context.StoryChoice;
-            return View(storyTransition);
+            var viewModel = new StoryTransitionViewModel(storyTransition)
+            {
+                Choices = _context.StoryChoice,
+                Entries = _context.StoryEntry,
+            };
+
+            return View(viewModel);
         }
 
         // POST: StoryTransitions/Edit/5
@@ -112,9 +131,14 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["choices"] = _context.StoryChoice;
-            return View(storyTransition);
+            var viewModel = new StoryTransitionViewModel(storyTransition)
+            {
+                PriorEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storyTransition.PriorEntryId)?.Body,
+                Choice = _context.StoryChoice.FirstOrDefault(choice => choice.Id == storyTransition.ChoiceId)?.Body,
+                NextEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storyTransition.NextEntryId)?.Body,
+            };
+
+            return View(viewModel);
         }
 
         // POST: StoryTransitions/Delete/5

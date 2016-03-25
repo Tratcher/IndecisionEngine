@@ -19,10 +19,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="StoryEntryId" class="col-md-2 control-label"></label>
+            <label asp-for="FirstEntryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.StoryEntryId, new SelectList(Model.Entries, "Id", "Body"), "")
-                <span asp-validation-for="StoryEntryId" class="text-danger" />
+                @Html.DropDownListFor(model => model.FirstEntryId, new SelectList(Model.Entries, "Id", "Body"), "")
+                <span asp-validation-for="FirstEntryId" class="text-danger" />
             </div>
         </div>
         <div class="form-group">

@@ -1,7 +1,7 @@
-@model IndecisionEngine.ViewModels.StoryExplorer.NewTransitionViewModel
+@model IndecisionEngine.ViewModels.StoryTransitions.StoryTransitionViewModel
 
 @{
-    ViewData["Title"] = "New Transition";
+    ViewData["Title"] = "Edit Transition";
 }
 
 <h2>Edit</h2>
@@ -14,9 +14,9 @@
         <input type="hidden" name="Id" value="@Model.Id" />
         <input type="hidden" asp-for="PriorEntryId" />
         <div class="form-group">
-            <label asp-for="PriorEntryId" class="col-md-2 control-label"></label>
+            <label asp-for="PriorEntry" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.Entries.FirstOrDefault(entry => entry.Id == model.PriorEntryId).Body)
+                @Html.DisplayFor(model => model.PriorEntry)
             </div>
         </div>
         <!--<div class="form-group">
@@ -68,7 +68,7 @@
 </form>
 
 <div>
-    <a asp-action="Index" asp-route-id="@Model.PriorEntryId">Back</a> <!--TODO: ?id=@Model.PriorEntryId and delete the new transition?-->
+    <a asp-action="Index" asp-route-id="@Model.PriorEntryId">Back</a>
 </div>
 
 @section Scripts {

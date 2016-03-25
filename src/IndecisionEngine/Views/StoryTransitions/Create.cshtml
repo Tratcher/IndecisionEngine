@@ -1,9 +1,7 @@
-@model IndecisionEngine.Models.StoryTransition
+@model IndecisionEngine.ViewModels.StoryTransitions.StoryTransitionViewModel
 
 @{
     ViewData["Title"] = "Create";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
-    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
 }
 
 <h2>Create</h2>
@@ -16,7 +14,7 @@
         <div class="form-group">
             <label asp-for="PriorEntryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.PriorEntryId, new SelectList(entries, "Id", "Body"), "")
+                @Html.DropDownListFor(model => model.PriorEntryId, new SelectList(Model.Entries, "Id", "Body"), "")
                 <span asp-validation-for="PriorEntryId" class="text-danger" />
             </div>
         </div>
@@ -30,7 +28,7 @@
         <div class="form-group">
             <label asp-for="ChoiceId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ChoiceId, new SelectList(choices, "Id", "Body"), "")
+                @Html.DropDownListFor(model => model.ChoiceId, new SelectList(Model.Choices, "Id", "Body"), "")
                 <span asp-validation-for="ChoiceId" class="text-danger" />
             </div>
         </div>
@@ -44,7 +42,7 @@
         <div class="form-group">
             <label asp-for="NextEntryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.NextEntryId, new SelectList(entries, "Id", "Body"), "")
+                @Html.DropDownListFor(model => model.NextEntryId, new SelectList(Model.Entries, "Id", "Body"), "")
                 <span asp-validation-for="NextEntryId" class="text-danger" />
             </div>
         </div>

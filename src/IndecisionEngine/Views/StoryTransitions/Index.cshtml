@@ -1,9 +1,7 @@
-@model IEnumerable<IndecisionEngine.Models.StoryTransition>
+@model IndecisionEngine.ViewModels.StoryTransitions.StoryTransitionsIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
-    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
 }
 
 <h2>Index</h2>
@@ -11,39 +9,39 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.PriorEntryId)
+            @Html.DisplayNameFor(model => model.Transitions.FirstOrDefault().PriorEntryId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Preconditions)
+            @Html.DisplayNameFor(model => model.Transitions.FirstOrDefault().Preconditions)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ChoiceId)
+            @Html.DisplayNameFor(model => model.Transitions.FirstOrDefault().ChoiceId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Effects)
+            @Html.DisplayNameFor(model => model.Transitions.FirstOrDefault().Effects)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.NextEntryId)
+            @Html.DisplayNameFor(model => model.Transitions.FirstOrDefault().NextEntryId)
         </th>
         <th></th>
     </tr>
     
-@foreach (var item in Model) {
+@foreach (var item in Model.Transitions) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => entries.FirstOrDefault(entry => entry.Id == item.PriorEntryId).Body)
+            @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(entry => entry.Id == item.PriorEntryId).Body)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Preconditions)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => choices.FirstOrDefault(choice => choice.Id == item.ChoiceId).Body)
+            @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == item.ChoiceId).Body)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Effects)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => entries.FirstOrDefault(entry => entry.Id == item.NextEntryId).Body)
+            @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(entry => entry.Id == item.NextEntryId).Body)
         </td>
         <td>
             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

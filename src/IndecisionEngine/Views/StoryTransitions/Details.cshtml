@@ -1,9 +1,7 @@
-@model IndecisionEngine.Models.StoryTransition
+@model IndecisionEngine.ViewModels.StoryTransitions.StoryTransitionViewModel
 
 @{
     ViewData["Title"] = "Details";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
-    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
 }
 
 <h2>Details</h2>
@@ -13,10 +11,10 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.PriorEntryId)
+            @Html.DisplayNameFor(model => model.PriorEntry)
         </dt>
         <dd>
-            @Html.DisplayFor(model => entries.FirstOrDefault(entry => entry.Id == model.PriorEntryId).Body)
+            @Html.DisplayFor(model => model.PriorEntry)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Preconditions)
@@ -25,10 +23,10 @@
             @Html.DisplayFor(model => model.Preconditions)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ChoiceId)
+            @Html.DisplayNameFor(model => model.Choice)
         </dt>
         <dd>
-            @Html.DisplayFor(model => choices.FirstOrDefault(choice => choice.Id == model.ChoiceId).Body)
+            @Html.DisplayFor(model => model.Choice)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Effects)
@@ -37,10 +35,10 @@
             @Html.DisplayFor(model => model.Effects)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.NextEntryId)
+            @Html.DisplayNameFor(model => model.NextEntry)
         </dt>
         <dd>
-            @Html.DisplayFor(model => entries.FirstOrDefault(entry => entry.Id == model.NextEntryId).Body)
+            @Html.DisplayFor(model => model.NextEntry)
         </dd>
     </dl>
 </div>
