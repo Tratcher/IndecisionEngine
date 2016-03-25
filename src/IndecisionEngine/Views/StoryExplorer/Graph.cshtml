@@ -13,6 +13,14 @@
     {
         builder.AppendLine($"E{entry.Id}({entry.Body})");
 
+        // TODO: Add links to entries, but it breaks when it reaches the first 'click' line
+        // click B "http://www.github.com" "This is a tooltip for a link"
+        /*
+        // var link = Url.Action("Index", new { id = entry.Id });
+        var link = Url.Action("Index", "StoryExplorer", new { id = entry.Id },
+            Context.Request.Scheme, Context.Request.Host.ToString());
+
+        builder.AppendLine($"click E{entry.Id} \"{link}\"");*/
     }
 
     foreach (var transition in Model.Transitions)
@@ -31,9 +39,12 @@
 <!--<h2>Index</h2> TODO: Title-->
 
 <!--TODO: <environment names="Development"> See _Layout.cshtml-->
+<link rel="stylesheet" type="text/css" href="~/lib/mermaid/dist/mermaid.css">
 <link rel="stylesheet" type="text/css" href="~/css/graph.css">
 <script src="~/lib/mermaid/dist/mermaid.js"></script>
-<script>mermaid.initialize({startOnLoad:true});</script>
+<script>
+    mermaid.initialize({ startOnLoad: true, cloneCssStyles: false });
+</script>
 
 <div class="mermaid">
     @graph
