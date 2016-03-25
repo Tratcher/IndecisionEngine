@@ -1,8 +1,7 @@
-@model IndecisionEngine.Models.StorySeed
+@model IndecisionEngine.ViewModels.StorySeeds.StorySeedViewModel
 
 @{
     ViewData["Title"] = "Edit";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
 }
 
 <h2>Edit</h2>
@@ -23,7 +22,7 @@
         <div class="form-group">
             <label asp-for="StoryEntryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.StoryEntryId, new SelectList(entries, "Id", "Body"), "")
+                @Html.DropDownListFor(model => model.StoryEntryId, new SelectList(Model.Entries, "Id", "Body"), "")
                 <span asp-validation-for="StoryEntryId" class="text-danger" />
             </div>
         </div>

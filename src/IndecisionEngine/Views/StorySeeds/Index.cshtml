@@ -1,8 +1,7 @@
-@model IEnumerable<IndecisionEngine.Models.StorySeed>
+@model IndecisionEngine.ViewModels.StorySeeds.StorySeedsIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
 }
 
 <h2>Index</h2>
@@ -10,21 +9,21 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Seeds.FirstOrDefault().Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.StoryEntryId)
+            @Html.DisplayNameFor(model => model.Seeds.FirstOrDefault().StoryEntryId)
         </th>
         <th></th>
     </tr>
     
-@foreach (var item in Model) {
+@foreach (var item in Model.Seeds) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => entries.FirstOrDefault(entry => entry.Id == item.StoryEntryId).Body)
+            @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(entry => entry.Id == item.StoryEntryId).Body)
         </td>
         <td>
             <a asp-controller="StoryExplorer" asp-route-id="@item.StoryEntryId">Read</a> |

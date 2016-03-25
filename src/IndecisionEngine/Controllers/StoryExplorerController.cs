@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
+using IndecisionEngine.ViewModels.StoryExplorer;
 using Microsoft.AspNet.Mvc;
 
 namespace IndecisionEngine.Controllers
@@ -22,9 +23,17 @@ namespace IndecisionEngine.Controllers
                 return RedirectToAction("Index", "StorySeeds");
             }
 
-            ViewData["transitions"] = _context.StoryTransition.Where(transition => transition.PriorEntryId == id);
-            ViewData["choices"] = _context.StoryChoice;
-            return View(_context.StoryEntry.FirstOrDefault(entry => entry.Id == id));
+            var entry = _context.StoryEntry.FirstOrDefault(e => e.Id == id);
+
+            var viewModel = new StoryExplorerViewModel()
+            {
+                Id = entry.Id,
+                Body = entry.Body,
+                Transitions = _context.StoryTransition.Where(transition => transition.PriorEntryId == id),
+                Choices = _context.StoryChoice,
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Graph(int? id)
@@ -34,10 +43,15 @@ namespace IndecisionEngine.Controllers
                 return RedirectToAction("Index", "StorySeeds");
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            ViewData["transitions"] = _context.StoryTransition;
-            ViewData["choices"] = _context.StoryChoice;
-            return View(_context.StorySeed.FirstOrDefault(entry => entry.Id == id));
+            var graphModel = new GraphViewModel()
+            {
+                Seed = _context.StorySeed.FirstOrDefault(entry => entry.Id == id),
+                Entries = _context.StoryEntry,
+                Transitions = _context.StoryTransition,
+                Choices = _context.StoryChoice,
+            };
+
+            return View(graphModel);
         }
 
         public IActionResult NewTransition(int? id)
@@ -52,9 +66,15 @@ namespace IndecisionEngine.Controllers
                 _context.StoryTransition.Add(transition);
                 _context.SaveChanges();
 
-                ViewData["entries"] = _context.StoryEntry;
-                ViewData["choices"] = _context.StoryChoice;
-                return View("NewTransition", transition);
+                var transitionView = new NewTransitionViewModel()
+                {
+                    Id = transition.Id,
+                    PriorEntryId = transition.PriorEntryId,
+                    Entries = _context.StoryEntry,
+                    Choices = _context.StoryChoice,
+                };
+
+                return View("NewTransition", transitionView);
             }
 
             return new HttpStatusCodeResult(400);

@@ -1,9 +1,7 @@
-@model IndecisionEngine.Models.StoryTransition
+@model IndecisionEngine.ViewModels.StoryExplorer.NewTransitionViewModel
 
 @{
     ViewData["Title"] = "New Transition";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
-    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
 }
 
 <h2>Edit</h2>
@@ -11,13 +9,14 @@
 <form asp-action="SaveTransition">
     <div class="form-horizontal">
         <hr />
-        <!--TODO: Why did asp-for="Id" keep giving me the wrong value? Even when the right value showed in the debugger-->
+        <!--TODO: Why did asp-for="Id" keep giving me the wrong value? Even when the right value showed in the debugger
+            name="Id" value="@Model.Id"-->
         <input type="hidden" name="Id" value="@Model.Id" />
         <input type="hidden" asp-for="PriorEntryId" />
         <div class="form-group">
             <label asp-for="PriorEntryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DisplayFor(model => entries.FirstOrDefault(entry => entry.Id == model.PriorEntryId).Body)
+                @Html.DisplayFor(model => model.Entries.FirstOrDefault(entry => entry.Id == model.PriorEntryId).Body)
             </div>
         </div>
         <!--<div class="form-group">
@@ -30,7 +29,7 @@
         <div class="form-group">
             <label asp-for="ChoiceId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ChoiceId, new SelectList(choices, "Id", "Body"), "")
+                @Html.DropDownListFor(model => model.ChoiceId, new SelectList(Model.Choices, "Id", "Body"), "")
                 <span asp-validation-for="ChoiceId" class="text-danger" />
             </div>
         </div>
@@ -50,7 +49,7 @@
         <div class="form-group">
             <label asp-for="NextEntryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.NextEntryId, new SelectList(entries, "Id", "Body"), "")
+                @Html.DropDownListFor(model => model.NextEntryId, new SelectList(Model.Entries, "Id", "Body"), "")
                 <span asp-validation-for="NextEntryId" class="text-danger" />
             </div>
         </div>
@@ -69,7 +68,7 @@
 </form>
 
 <div>
-    <a asp-action="Index">Back</a> <!--TODO: ?id=@Model.PriorEntryId-->
+    <a asp-action="Index" asp-route-id="@Model.PriorEntryId">Back</a> <!--TODO: ?id=@Model.PriorEntryId and delete the new transition?-->
 </div>
 
 @section Scripts {

@@ -1,9 +1,7 @@
-@model IndecisionEngine.Models.StoryEntry
+@model IndecisionEngine.ViewModels.StoryExplorer.StoryExplorerViewModel
 
 @{
     ViewData["Title"] = "Index";
-    var transitions = (IEnumerable<StoryTransition>)ViewData["transitions"];
-    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
 }
 
 <!--<h2>Index</h2> TODO: Title-->
@@ -17,11 +15,11 @@
 <table class="table">
 
 
-    @foreach (var transition in transitions)
+    @foreach (var transition in Model.Transitions)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => choices.FirstOrDefault(choice => choice.Id == transition.ChoiceId).Body)
+                @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == transition.ChoiceId).Body)
             </td>
             <td>
                 @{

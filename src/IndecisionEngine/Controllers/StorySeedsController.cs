@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
+using IndecisionEngine.ViewModels.StorySeeds;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 
@@ -18,8 +19,13 @@ namespace IndecisionEngine.Controllers
         // GET: StorySeeds
         public IActionResult Index()
         {
-            ViewData["entries"] = _context.StoryEntry;
-            return View(_context.StorySeed.ToList());
+            var viewModel = new StorySeedsIndexViewModel()
+            {
+                Seeds = _context.StorySeed,
+                Entries = _context.StoryEntry,
+            };
+
+            return View(viewModel);
         }
 
         // GET: StorySeeds/Details/5
@@ -36,15 +42,21 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            return View(storySeed);
+            var viewModel = new StorySeedViewModel()
+            {
+                Id = storySeed.Id,
+                Title = storySeed.Title,
+                StoryEntryId = storySeed.StoryEntryId,
+                FirstEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storySeed.StoryEntryId)?.Body
+            };
+
+            return View(viewModel);
         }
 
         // GET: StorySeeds/Create
         public IActionResult Create()
         {
-            ViewData["entries"] = _context.StoryEntry;
-            return View();
+            return View(new StorySeedViewModel() { Entries = _context.StoryEntry });
         }
 
         // POST: StorySeeds/Create
@@ -83,8 +95,15 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            return View(storySeed);
+            var viewModel = new StorySeedViewModel()
+            {
+                Id = storySeed.Id,
+                Title = storySeed.Title,
+                StoryEntryId = storySeed.StoryEntryId,
+                Entries = _context.StoryEntry,
+            };
+
+            return View(viewModel);
         }
 
         // POST: StorySeeds/Edit/5
@@ -116,8 +135,15 @@ namespace IndecisionEngine.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["entries"] = _context.StoryEntry;
-            return View(storySeed);
+            var viewModel = new StorySeedViewModel()
+            {
+                Id = storySeed.Id,
+                Title = storySeed.Title,
+                StoryEntryId = storySeed.StoryEntryId,
+                FirstEntry = _context.StoryEntry.FirstOrDefault(entry => entry.Id == storySeed.StoryEntryId)?.Body,
+            };
+
+            return View(viewModel);
         }
 
         // POST: StorySeeds/Delete/5

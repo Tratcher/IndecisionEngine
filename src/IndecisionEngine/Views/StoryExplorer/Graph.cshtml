@@ -1,34 +1,28 @@
-@model IndecisionEngine.Models.StorySeed
+@model IndecisionEngine.ViewModels.StoryExplorer.GraphViewModel
 
 @{
     ViewData["Title"] = "Story Graph";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
-    var transitions = (IEnumerable<StoryTransition>)ViewData["transitions"];
-    var choices = (IEnumerable<StoryChoice>)ViewData["choices"];
 
     // http://knsv.github.io/mermaid/flowchart.html
-    // TODO: CSS styling. --> renders a white line on white background. Similarly -- text -->
     var builder = new StringBuilder();
     builder.AppendLine("graph TD");
-    builder.AppendLine($"Seed({Model.Title})");
-    builder.AppendLine($"Seed-->E{Model.StoryEntryId}");
+    builder.AppendLine($"Seed({Model.Seed.Title})");
+    builder.AppendLine($"Seed-->E{Model.Seed.StoryEntryId}");
 
-    foreach (var entry in entries)
+    foreach (var entry in Model.Entries)
     {
         builder.AppendLine($"E{entry.Id}({entry.Body})");
 
     }
 
-    var linkCount = 0;
-    foreach (var transition in transitions)
+    foreach (var transition in Model.Transitions)
     {
-        var choice = choices.FirstOrDefault(c => c.Id == transition.ChoiceId);
+        var choice = Model.Choices.FirstOrDefault(c => c.Id == transition.ChoiceId);
+
         builder.AppendLine($"E{transition.PriorEntryId}-- {choice.Body} -->E{transition.NextEntryId}");
+        // or:
         // builder.AppendLine($"E{transition.PriorEntryId}-.->T{transition.Id}({choice.Body})");
         // builder.AppendLine($"T{transition.Id}({choice.Body})-.->E{transition.NextEntryId}");
-
-        linkCount++;
-        // builder.AppendLine($"linkStyle {linkCount} color:black;");
     }
 
     var graph = builder.ToString();

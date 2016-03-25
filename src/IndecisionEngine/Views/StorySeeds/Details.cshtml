@@ -1,14 +1,13 @@
-@model IndecisionEngine.Models.StorySeed
+@model IndecisionEngine.ViewModels.StorySeeds.StorySeedViewModel
 
 @{
     ViewData["Title"] = "Details";
-    var entries = (IEnumerable<StoryEntry>)ViewData["entries"];
 }
 
 <h2>Details</h2>
 
 <div>
-    <h4>StorySeed</h4>
+    <h4>Story Seed</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -18,10 +17,10 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.StoryEntryId)
+            @Html.DisplayNameFor(model => model.FirstEntry)
         </dt>
         <dd>
-            @Html.DisplayFor(model => entries.FirstOrDefault(entry => entry.Id == model.StoryEntryId).Body)
+            @Html.DisplayFor(model => model.FirstEntry)
         </dd>
     </dl>
 </div>
