@@ -1,0 +1,18 @@
+@model IndecisionEngine.ViewModels.StoryExplorer.HistoryViewModel
+
+@{
+    ViewData["Title"] = "History";
+}
+<h2>History: @Model.Seed.Title</h2>
+<p>
+    @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == modelItem.Seed.FirstEntryId).Body)
+</p>
+@foreach (var entry in Model.History)
+{
+    <p>
+        @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == entry.ChoiceId).Body)
+    </p>
+    <p>
+        @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == entry.EndEntryId).Body)
+    </p>
+}

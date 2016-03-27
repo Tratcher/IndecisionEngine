@@ -157,7 +157,7 @@ namespace IndecisionEngine.Controllers
         public IActionResult DeleteAll()
         {
             _context.Database.ExecuteSqlCommand("delete from StoryTransition");
-            return View("Index", _context.StoryTransition.ToList());
+            return RedirectToAction("Index");
         }
     }
 }

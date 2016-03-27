@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
@@ -32,6 +34,60 @@ namespace IndecisionEngine.Controllers
                 Body = entry.Body,
                 Transitions = _context.StoryTransition.Where(transition => transition.PriorEntryId == id),
                 Choices = _context.StoryChoice,
+            };
+
+            return View(viewModel);
+        }
+
+        public IActionResult Start(int id)
+        {
+            var seed = _context.StorySeed.FirstOrDefault(s => s.Id == id);
+
+            HistoryHelper.Reset(HttpContext, id);
+
+            // TODO: Initial state
+
+            return RedirectToAction("Index", new { id = seed.FirstEntryId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Choose(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                // Find the matching transition
+                var transition = _context.StoryTransition.FirstOrDefault(t => t.Id == id);
+
+                // Apply any state changes
+                // TODO:
+
+                // Update the history
+                // TODO: This should be stored in the user database, but for now we're just going to use session.
+                HistoryHelper.AppendToHistory(HttpContext, transition, string.Empty);
+
+                // Navigate to the next entry
+                return RedirectToAction("Index", new { id = transition.NextEntryId });
+            }
+
+            return new HttpStatusCodeResult(400);
+        }
+
+        public IActionResult History()
+        {
+            var seedId = HistoryHelper.GetSeedId(HttpContext);
+            if (!seedId.HasValue)
+            {
+                return RedirectToAction("Index", "StorySeeds");
+            }
+            var seed = _context.StorySeed.FirstOrDefault(s => s.Id == seedId.Value);
+
+            var viewModel = new HistoryViewModel()
+            {
+                Seed = seed,
+                History = HistoryHelper.GetHistory(HttpContext),
+                Choices = _context.StoryChoice,
+                Entries = _context.StoryEntry,
             };
 
             return View(viewModel);

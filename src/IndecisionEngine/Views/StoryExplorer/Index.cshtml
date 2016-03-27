@@ -5,6 +5,19 @@
 }
 
 <!--<h2>Index</h2> TODO: Title-->
+<style type="text/css">
+    form input[type="submit"] {
+        background: none;
+        border: none;
+        color: #337ab7;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    form input[type="submit"]:hover {
+        text-decoration: underline;
+    }
+</style>
 
 <h2>Entry:</h2>
 <p>
@@ -13,8 +26,6 @@
 <a asp-controller="StoryEntries" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> 
 <h3>Choices:</h3>
 <table class="table">
-
-
     @foreach (var transition in Model.Transitions)
     {
         <tr>
@@ -22,24 +33,23 @@
                 @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == transition.ChoiceId).Body)
             </td>
             <td>
-                @{
-                    if (transition.NextEntryId.HasValue)
+                <form asp-action="Choose">
+                    @if (transition.NextEntryId.HasValue)
                     {
-                        <a asp-action="Index" asp-route-id="@transition.NextEntryId">Select</a>
+                        <!--TODO: Why did asp-for="Id" keep giving me the wrong value? Even when the right value showed in the debugger
+                            name="Id" value="@Model.Id"-->
+                        <input type="hidden" name="Id" value="@transition.Id" />
+                        <input type="submit" value="Choose" /> <text>|</text>
                     }
-                    else
-                    {
-                        <a asp-action="EditTransition" asp-route-id="@transition.Id">Select</a>
-                    }
-                }
-                |
-                <a asp-action="EditTransition" asp-route-id="@transition.Id">Edit</a> |
-                <a asp-controller="StoryTransitions" asp-action="Details" asp-route-id="@transition.Id">Details</a> |
-                <a asp-controller="StoryTransitions" asp-action="Delete" asp-route-id="@transition.Id">Delete</a>
+                    <a asp-action="EditTransition" asp-route-id="@transition.Id">Edit</a> |
+                    <a asp-controller="StoryTransitions" asp-action="Details" asp-route-id="@transition.Id">Details</a> |
+                    <a asp-controller="StoryTransitions" asp-action="Delete" asp-route-id="@transition.Id">Delete</a>
+                </form>
             </td>
         </tr>
     }
 </table>
 <p>
-    <a asp-action="NewTransition" asp-route-id="@Model.Id">New Choice</a>
+    <a asp-action="NewTransition" asp-route-id="@Model.Id">New Choice</a> |
+    <a asp-action="History">History</a>
 </p>

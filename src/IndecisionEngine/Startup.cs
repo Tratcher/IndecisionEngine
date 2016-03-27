@@ -45,6 +45,9 @@ namespace IndecisionEngine
                 .AddDbContext<StoryDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
+            services.AddCaching();
+            services.AddSession();
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -88,6 +91,7 @@ namespace IndecisionEngine
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
 
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseIdentity();
 

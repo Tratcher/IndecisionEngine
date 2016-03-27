@@ -11,7 +11,8 @@
 
     foreach (var entry in Model.Entries)
     {
-        builder.AppendLine($"E{entry.Id}({entry.Body})");
+        var bodyText = entry.Body.Replace("\"", "#quot;");
+        builder.AppendLine($"E{entry.Id}(\"{bodyText}\")");
 
         // TODO: Add links to entries, but it breaks when it reaches the first 'click' line
         // click B "http://www.github.com" "This is a tooltip for a link"
@@ -27,7 +28,7 @@
     {
         var choice = Model.Choices.FirstOrDefault(c => c.Id == transition.ChoiceId);
 
-        builder.AppendLine($"E{transition.PriorEntryId}-- {choice.Body} -->E{transition.NextEntryId}");
+        builder.AppendLine($"E{transition.PriorEntryId}-- {choice.Body.Replace("-", "")} -->E{transition.NextEntryId}");
         // or:
         // builder.AppendLine($"E{transition.PriorEntryId}-.->T{transition.Id}({choice.Body})");
         // builder.AppendLine($"T{transition.Id}({choice.Body})-.->E{transition.NextEntryId}");

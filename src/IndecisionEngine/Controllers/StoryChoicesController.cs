@@ -122,7 +122,7 @@ namespace IndecisionEngine.Controllers
         public IActionResult DeleteAll()
         {
             _context.Database.ExecuteSqlCommand("delete from StoryChoice");
-            return View("Index", _context.StoryChoice.ToList());
+            return RedirectToAction("Index");
         }
     }
 }
