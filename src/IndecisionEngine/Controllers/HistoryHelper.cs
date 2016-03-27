@@ -77,11 +77,39 @@ namespace IndecisionEngine.Controllers
 
         // Pop all later entries off the history and reset the count.
         // Return the matching entry (which should now be the last item).
-        /*
-        public HistoryEntry RewindTo(int id)
+        public static HistoryEntry GoBackTo(HttpContext context, int id)
         {
-            Debug.Assert(id <= context.Session.GetInt32(SessionCountKey));
-        }*/
+            Debug.Assert(id <= context.Session.GetInt32(CountKey));
+
+            // Enumerate history entries, remove all with an Id higher than the given one.
+
+            var historyKeys = context.Session.Keys.Where(key =>
+                key.StartsWith(NodeKeyPrefix, StringComparison.Ordinal)).ToList();
+
+            HistoryEntry entry = null;
+
+            foreach (var key in historyKeys)
+            {
+                var idString = key.Substring(NodeKeyPrefix.Length);
+                var nodeId = int.Parse(idString, NumberStyles.None, CultureInfo.InvariantCulture);
+
+                if (nodeId > id)
+                {
+                    context.Session.Remove(key);
+                }
+
+                if (nodeId == id)
+                {
+                    entry = Deserialize(context.Session.Get(key));
+                }
+            }
+
+            // Reset the entry count.
+            context.Session.SetInt32(CountKey, id);
+
+            Debug.Assert(entry != null);
+            return entry;
+        }
 
         // Id, ChoiceId, EndEntryId, State byte Length, State UTF8 string
         private static byte[] Serialize(HistoryEntry entry)

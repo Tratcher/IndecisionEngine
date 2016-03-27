@@ -4,15 +4,35 @@
     ViewData["Title"] = "History";
 }
 <h2>History: @Model.Seed.Title</h2>
-<p>
-    @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == modelItem.Seed.FirstEntryId).Body)
-</p>
-@foreach (var entry in Model.History)
-{
-    <p>
-        @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == entry.ChoiceId).Body)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == entry.EndEntryId).Body)
-    </p>
-}
+<table class="table">
+    <tr>
+        <td>
+            <p>
+                @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == modelItem.Seed.FirstEntryId).Body)
+            </p>
+        </td>
+        <td>
+            <a asp-action="Start" asp-route-id="@Model.Seed.Id">Restart</a>
+        </td>
+    </tr>
+    @foreach (var entry in Model.History)
+    {
+        <tr>
+            <td>
+                <p>
+                    @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == entry.ChoiceId).Body)
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == entry.EndEntryId).Body)
+                </p>
+            </td>
+            <td>
+                <a asp-action="GoBackTo" asp-route-id="@entry.Id">Go back</a>
+            </td>
+        </tr>
+    }
+</table>

@@ -59,6 +59,8 @@ namespace IndecisionEngine.Controllers
                 // Find the matching transition
                 var transition = _context.StoryTransition.FirstOrDefault(t => t.Id == id);
 
+                // TODO: Integrity check. Hitting the back button does not revert state or history.
+
                 // Apply any state changes
                 // TODO:
 
@@ -82,6 +84,7 @@ namespace IndecisionEngine.Controllers
             }
             var seed = _context.StorySeed.FirstOrDefault(s => s.Id == seedId.Value);
 
+            // TODO: Pagination
             var viewModel = new HistoryViewModel()
             {
                 Seed = seed,
@@ -91,6 +94,15 @@ namespace IndecisionEngine.Controllers
             };
 
             return View(viewModel);
+        }
+
+        public IActionResult GoBackTo(int id)
+        {
+            var historyEntry = HistoryHelper.GoBackTo(HttpContext, id);
+
+            // TODO: State?
+
+            return RedirectToAction("Index", new { id = historyEntry.EndEntryId });
         }
 
         public IActionResult Graph(int? id)
