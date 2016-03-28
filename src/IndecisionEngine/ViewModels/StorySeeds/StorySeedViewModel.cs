@@ -15,6 +15,7 @@ namespace IndecisionEngine.ViewModels.StorySeeds
             Id = storySeed.Id;
             Title = storySeed.Title;
             FirstEntryId = storySeed.FirstEntryId;
+            InitialState = storySeed.InitialState;
         }
 
         public int Id { get; set; }
@@ -26,6 +27,9 @@ namespace IndecisionEngine.ViewModels.StorySeeds
 
         [Display(Name = "First Entry")]
         public string FirstEntry { get; set; }
+
+        [Display(Name = "Initial State")]
+        public string InitialState { get; set; }
 
         public IEnumerable<StoryEntry> Entries { get; set; }
     }

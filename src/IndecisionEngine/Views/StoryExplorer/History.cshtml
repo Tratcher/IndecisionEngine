@@ -6,33 +6,50 @@
 <h2>History: @Model.Seed.Title</h2>
 <table class="table">
     <tr>
+        <th></th>
+        <th>@Html.DisplayNameFor(model => model.History.FirstOrDefault().EndState)</th>
+        <th></th>
+    </tr>
+    <tr>
         <td>
             <p>
-                @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == modelItem.Seed.FirstEntryId).Body)
+                @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(e => e.Id == modelItem.Seed.FirstEntryId).Body)
             </p>
+        </td>
+        <td>
+            <!--TODO: Author / debug mode only-->
+            State: @Model.Seed.InitialState
         </td>
         <td>
             <a asp-action="Start" asp-route-id="@Model.Seed.Id">Restart</a>
         </td>
+    </tr>
+    <tr>
     </tr>
     @foreach (var entry in Model.History)
     {
         <tr>
             <td>
                 <p>
-                    @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(choice => choice.Id == entry.ChoiceId).Body)
+                    @Html.DisplayFor(modelItem => Model.Choices.FirstOrDefault(c => c.Id == entry.ChoiceId).Body)
                 </p>
             </td>
         </tr>
         <tr>
             <td>
                 <p>
-                    @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(choice => choice.Id == entry.EndEntryId).Body)
+                    @Html.DisplayFor(modelItem => Model.Entries.FirstOrDefault(e => e.Id == entry.EndEntryId).Body)
                 </p>
+            </td>
+            <td>
+                <!--TODO: Author / debug mode only-->
+                State: @entry.EndState
             </td>
             <td>
                 <a asp-action="GoBackTo" asp-route-id="@entry.Id">Go back</a>
             </td>
+        </tr>
+        <tr>
         </tr>
     }
 </table>

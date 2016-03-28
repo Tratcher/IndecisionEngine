@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IndecisionEngine.Models
 {
@@ -10,6 +7,8 @@ namespace IndecisionEngine.Models
         public int Id { get; set; }
         public int ChoiceId { get; set; }
         public int EndEntryId { get; set; }
+
+        [Display(Name = "State")]
         public string EndState { get; set; }
     }
 }

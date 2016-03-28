@@ -18,6 +18,17 @@ namespace IndecisionEngine.Controllers
             _context = context;
         }
 
+        public IActionResult Start(int id)
+        {
+            var seed = _context.StorySeed.FirstOrDefault(s => s.Id == id);
+
+            HistoryHelper.Reset(HttpContext, id);
+
+            StateHelper.SetState(HttpContext, seed.InitialState);
+
+            return RedirectToAction("Index", new { id = seed.FirstEntryId });
+        }
+
         // GET: StoryExplorer
         public IActionResult Index(int? id)
         {
@@ -32,22 +43,12 @@ namespace IndecisionEngine.Controllers
             {
                 Id = entry.Id,
                 Body = entry.Body,
+                State = StateHelper.GetState(HttpContext),
                 Transitions = _context.StoryTransition.Where(transition => transition.PriorEntryId == id),
                 Choices = _context.StoryChoice,
             };
 
             return View(viewModel);
-        }
-
-        public IActionResult Start(int id)
-        {
-            var seed = _context.StorySeed.FirstOrDefault(s => s.Id == id);
-
-            HistoryHelper.Reset(HttpContext, id);
-
-            // TODO: Initial state
-
-            return RedirectToAction("Index", new { id = seed.FirstEntryId });
         }
 
         [HttpPost]
@@ -62,11 +63,12 @@ namespace IndecisionEngine.Controllers
                 // TODO: Integrity check. Hitting the back button does not revert state or history.
 
                 // Apply any state changes
-                // TODO:
+                // TODO: This should be stored in the user database, but for now we're just going to use session.
+                var state = StateHelper.Update(HttpContext, transition.Effects);
 
                 // Update the history
                 // TODO: This should be stored in the user database, but for now we're just going to use session.
-                HistoryHelper.AppendToHistory(HttpContext, transition, string.Empty);
+                HistoryHelper.AppendToHistory(HttpContext, transition, state);
 
                 // Navigate to the next entry
                 return RedirectToAction("Index", new { id = transition.NextEntryId });
@@ -100,7 +102,7 @@ namespace IndecisionEngine.Controllers
         {
             var historyEntry = HistoryHelper.GoBackTo(HttpContext, id);
 
-            // TODO: State?
+            StateHelper.SetState(HttpContext, historyEntry.EndState);
 
             return RedirectToAction("Index", new { id = historyEntry.EndEntryId });
         }

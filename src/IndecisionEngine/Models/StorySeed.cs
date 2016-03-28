@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IndecisionEngine.Models
 {
@@ -14,5 +10,8 @@ namespace IndecisionEngine.Models
 
         [Display(Name = "First Entry")]
         public int? FirstEntryId { get; set; }
+
+        [Display(Name = "Initial State")]
+        public string InitialState { get; set; }
     }
 }

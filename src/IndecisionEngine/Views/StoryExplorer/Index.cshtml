@@ -23,7 +23,12 @@
 <p>
     @Model.Body
 </p>
-<a asp-controller="StoryEntries" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> 
+<a asp-controller="StoryEntries" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+<!--TODO: Author mode / debugging only-->
+<h3>State:</h3>
+<p>
+    @Model.State
+</p>
 <h3>Choices:</h3>
 <table class="table">
     @foreach (var transition in Model.Transitions)
