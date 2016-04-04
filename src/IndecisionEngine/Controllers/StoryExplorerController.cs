@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.StoryExplorer;
 using IndecisionEngine.ViewModels.StoryTransitions;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 
 namespace IndecisionEngine.Controllers
 {
+    [Authorize]
     public class StoryExplorerController : Controller
     {
         private StoryDbContext _context;
@@ -18,6 +18,7 @@ namespace IndecisionEngine.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public IActionResult Start(int id)
         {
             var seed = _context.StorySeed.FirstOrDefault(s => s.Id == id);
@@ -30,6 +31,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryExplorer
+        [AllowAnonymous]
         public IActionResult Index(int? id)
         {
             if (!id.HasValue)
@@ -52,6 +54,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public IActionResult Choose(int id)
         {
@@ -77,6 +80,7 @@ namespace IndecisionEngine.Controllers
             return new HttpStatusCodeResult(400);
         }
 
+        [AllowAnonymous]
         public IActionResult History()
         {
             var seedId = HistoryHelper.GetSeedId(HttpContext);
@@ -98,6 +102,7 @@ namespace IndecisionEngine.Controllers
             return View(viewModel);
         }
 
+        [AllowAnonymous]
         public IActionResult GoBackTo(int id)
         {
             var historyEntry = HistoryHelper.GoBackTo(HttpContext, id);

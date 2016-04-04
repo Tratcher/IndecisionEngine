@@ -11,6 +11,8 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>Password:</dt>
+        <dd>Passwords have been disabled.</dd>
+        @*
         <dd>
             @if (Model.HasPassword)
             {
@@ -21,6 +23,7 @@
                 <text>[&nbsp;&nbsp;<a asp-controller="Manage" asp-action="SetPassword">Create</a>&nbsp;&nbsp;]</text>
             }
         </dd>
+        *@
         <dt>External Logins:</dt>
         <dd>
             @Model.Logins.Count [&nbsp;&nbsp;<a asp-controller="Manage" asp-action="ManageLogins">Manage</a>&nbsp;&nbsp;]

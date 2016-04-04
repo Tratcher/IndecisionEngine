@@ -16,6 +16,7 @@ using IndecisionEngine.ViewModels.Account;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
+    // [RequireHttps] TODO: Broken in RC1
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -47,7 +48,7 @@ namespace IndecisionEngine.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-
+        /*
         //
         // POST: /Account/Login
         [HttpPost]
@@ -58,6 +59,17 @@ namespace IndecisionEngine.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                // Require the user to have a confirmed email before they can log on.
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        // TODO: Link to re-send confirmation e-mail.
+                        ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
+                        return View(model);
+                    }
+                }
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -85,7 +97,7 @@ namespace IndecisionEngine.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        */
         //
         // GET: /Account/Register
         [HttpGet]
@@ -94,7 +106,7 @@ namespace IndecisionEngine.Controllers
         {
             return View();
         }
-
+        /*
         //
         // POST: /Account/Register
         [HttpPost]
@@ -110,11 +122,14 @@ namespace IndecisionEngine.Controllers
                 {
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                    //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+#if DNX451
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                        "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+#else
                     await _signInManager.SignInAsync(user, isPersistent: false);
+#endif
                     _logger.LogInformation(3, "User created a new account with password.");
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
@@ -124,7 +139,7 @@ namespace IndecisionEngine.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        */
         //
         // POST: /Account/LogOff
         [HttpPost]
@@ -163,6 +178,12 @@ namespace IndecisionEngine.Controllers
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            /*
+            User.
+            // TODO: Force e-mail confirmation?
+            if (await !_userManager.IsEmailConfirmedAsync(info.))
+            */
+
             if (result.Succeeded)
             {
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
@@ -213,9 +234,18 @@ namespace IndecisionEngine.Controllers
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
+/*#if DNX451
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                        await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                            "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+
+                        TODO: Redirect to a waiting-for-email-confirmation-page
+#else*/
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
+//#endif
                     }
                 }
                 AddErrors(result);
@@ -270,17 +300,19 @@ namespace IndecisionEngine.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
-                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                //   "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                //return View("ForgotPasswordConfirmation");
+#if DNX451
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
+                   "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                return View("ForgotPasswordConfirmation");
+#endif
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        /*
         //
         // GET: /Account/ForgotPasswordConfirmation
         [HttpGet]
@@ -333,7 +365,7 @@ namespace IndecisionEngine.Controllers
         {
             return View();
         }
-
+        */
         //
         // GET: /Account/SendCode
         [HttpGet]
@@ -434,8 +466,7 @@ namespace IndecisionEngine.Controllers
                 return View(model);
             }
         }
-
-        #region Helpers
+#region Helpers
 
         private void AddErrors(IdentityResult result)
         {
@@ -462,6 +493,6 @@ namespace IndecisionEngine.Controllers
             }
         }
 
-        #endregion
+#endregion
     }
 }

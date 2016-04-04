@@ -2,11 +2,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.StorySeeds;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 
 namespace IndecisionEngine.Controllers
 {
+    [Authorize]
     public class StorySeedsController : Controller
     {
         private StoryDbContext _context;
@@ -17,6 +19,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StorySeeds
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var viewModel = new StorySeedsIndexViewModel()

@@ -4,9 +4,11 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using IndecisionEngine.Models;
+using Microsoft.AspNet.Authorization;
 
 namespace IndecisionEngine.Controllers
 {
+    [Authorize]
     public class StoryEntriesController : Controller
     {
         private StoryDbContext _context;
