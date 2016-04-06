@@ -9,6 +9,9 @@ namespace IndecisionEngine.ViewModels.Account
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
+        public string DisplayName { get; set; }
+
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
     }

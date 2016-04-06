@@ -111,7 +111,7 @@ namespace IndecisionEngine
                 options.AppId = Configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                 // TODO: remove e-mail workaround. https://github.com/aspnet/Security/issues/620#issuecomment-165464501
-                options.UserInformationEndpoint = "https://graph.facebook.com/me?fields=email";
+                options.UserInformationEndpoint = "https://graph.facebook.com/me?fields=email,name";
                 options.Scope.Add("email");
             });
             app.UseGoogleAuthentication(options =>

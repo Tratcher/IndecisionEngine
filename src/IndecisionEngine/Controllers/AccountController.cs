@@ -203,7 +203,12 @@ namespace IndecisionEngine.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                var name = info.ExternalPrincipal.GetUserName();
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel
+                {
+                    DisplayName = name,
+                    Email = email
+                });
             }
         }
 
@@ -227,7 +232,12 @@ namespace IndecisionEngine.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    DisplayName = model.DisplayName,
+                    UserName = model.Email,
+                    Email = model.Email
+                };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

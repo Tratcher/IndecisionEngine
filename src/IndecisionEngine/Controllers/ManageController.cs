@@ -53,6 +53,8 @@ namespace IndecisionEngine.Controllers
             var user = await GetCurrentUserAsync();
             var model = new IndexViewModel
             {
+                DisplayName = user.DisplayName,
+                Email = user.Email,
                 HasPassword = await _userManager.HasPasswordAsync(user),
                 PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
                 TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
