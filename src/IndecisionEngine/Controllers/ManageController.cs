@@ -48,6 +48,8 @@ namespace IndecisionEngine.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.ChangeDisplayNameSuccess ? "Your display name has been changed."
+                : message == ManageMessageId.ChangeEmailSuccess ? "Your email has been changed."
                 : "";
 
             var user = await GetCurrentUserAsync();
@@ -62,6 +64,46 @@ namespace IndecisionEngine.Controllers
                 BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user)
             };
             return View(model);
+        }
+
+        //
+        // POST: /Manage/ChangeDisplayName
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeDisplayName(string displayName)
+        {
+            ManageMessageId? message = ManageMessageId.Error;
+            var user = await GetCurrentUserAsync();
+            if (user != null && !string.Equals(user.DisplayName, displayName, StringComparison.Ordinal))
+            {
+                user.DisplayName = displayName;
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    message = ManageMessageId.ChangeDisplayNameSuccess;
+                }
+            }
+            return RedirectToAction(nameof(Index), new { Message = message });
+        }
+
+        //
+        // POST: /Manage/ChangeEmail
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeEmail(string email)
+        {
+            ManageMessageId? message = ManageMessageId.Error;
+            var user = await GetCurrentUserAsync();
+            if (user != null && !string.Equals(user.Email, email, StringComparison.Ordinal))
+            {
+                var result = await _userManager.SetEmailAsync(user, email);
+                if (result.Succeeded)
+                {
+                    // TODO: Reset confirmation. Re-send validation e-mail.
+                    message = ManageMessageId.ChangeEmailSuccess;
+                }
+            }
+            return RedirectToAction(nameof(Index), new { Message = message });
         }
 
         //
@@ -332,12 +374,14 @@ namespace IndecisionEngine.Controllers
         {
             AddPhoneSuccess,
             AddLoginSuccess,
+            ChangeDisplayNameSuccess,
+            ChangeEmailSuccess,
             ChangePasswordSuccess,
             SetTwoFactorSuccess,
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
         }
 
         private async Task<ApplicationUser> GetCurrentUserAsync()

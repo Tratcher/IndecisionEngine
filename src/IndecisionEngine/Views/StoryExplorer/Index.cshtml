@@ -5,19 +5,6 @@
 }
 
 <!--<h2>Index</h2> TODO: Title-->
-<style type="text/css">
-    form input[type="submit"] {
-        background: none;
-        border: none;
-        color: #337ab7;
-        text-decoration: none;
-        cursor: pointer;
-        padding: 0;
-    }
-    form input[type="submit"]:hover {
-        text-decoration: underline;
-    }
-</style>
 
 <h2>Entry:</h2>
 <p>
@@ -44,7 +31,7 @@
                         <!--TODO: Why did asp-for="Id" keep giving me the wrong value? Even when the right value showed in the debugger
                             name="Id" value="@Model.Id"-->
                         <input type="hidden" name="Id" value="@transition.Id" />
-                        <input type="submit" value="Choose" /> <text>|</text>
+                        <input type="submit" value="Choose" class="btn-link"/><text>|</text>
                     }
                     <a asp-action="EditTransition" asp-route-id="@transition.Id">Edit</a> |
                     <a asp-controller="StoryTransitions" asp-action="Details" asp-route-id="@transition.Id">Details</a> |
