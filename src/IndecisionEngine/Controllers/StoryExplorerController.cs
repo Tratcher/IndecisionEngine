@@ -103,6 +103,25 @@ namespace IndecisionEngine.Controllers
         }
 
         [AllowAnonymous]
+        public IActionResult GoBack()
+        {
+            var historyEntry = HistoryHelper.GoBack(HttpContext);
+            if (historyEntry == null)
+            {
+                var seed = HistoryHelper.GetSeedId(HttpContext);
+                if (seed.HasValue)
+                {
+                    return RedirectToAction(nameof(Start), new { id = seed.Value });
+                }
+                return RedirectToAction(nameof(StorySeedsController.Index), nameof(StorySeedsController));
+            }
+
+            StateHelper.SetState(HttpContext, historyEntry.EndState);
+
+            return RedirectToAction("Index", new { id = historyEntry.EndEntryId });
+        }
+
+        [AllowAnonymous]
         public IActionResult GoBackTo(int id)
         {
             var historyEntry = HistoryHelper.GoBackTo(HttpContext, id);
