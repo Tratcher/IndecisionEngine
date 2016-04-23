@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.Accounts;
@@ -11,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IndecisionEngine.Controllers
 {
-    [Authorize] // TODO: Admin
+    [Authorize("Admin")]
     public class AccountsController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -46,6 +44,7 @@ namespace IndecisionEngine.Controllers
             var viewModel = new AccountsDetailsViewModel(user)
             {
                 Logins = await _userManager.GetLoginsAsync(user),
+                Claims = await _userManager.GetClaimsAsync(user),
             };
 
             return View(viewModel);
@@ -67,6 +66,7 @@ namespace IndecisionEngine.Controllers
             var viewModel = new AccountsDetailsViewModel(user)
             {
                 Logins = await _userManager.GetLoginsAsync(user),
+                Claims = await _userManager.GetClaimsAsync(user),
             };
             return View(viewModel);
         }
@@ -101,6 +101,7 @@ namespace IndecisionEngine.Controllers
             viewModel = new AccountsDetailsViewModel(user)
             {
                 Logins = await _userManager.GetLoginsAsync(user),
+                Claims = await _userManager.GetClaimsAsync(user),
             };
             return View(viewModel);
         }
@@ -122,6 +123,7 @@ namespace IndecisionEngine.Controllers
             var viewModel = new AccountsDetailsViewModel(user)
             {
                 Logins = await _userManager.GetLoginsAsync(user),
+                Claims = await _userManager.GetClaimsAsync(user),
             };
 
             return View(viewModel);
@@ -143,6 +145,7 @@ namespace IndecisionEngine.Controllers
             var viewModel = new AccountsDetailsViewModel(user)
             {
                 Logins = await _userManager.GetLoginsAsync(user),
+                Claims = await _userManager.GetClaimsAsync(user),
             };
             return View(viewModel);
         }

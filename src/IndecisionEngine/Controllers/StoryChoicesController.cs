@@ -119,6 +119,7 @@ namespace IndecisionEngine.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize("Admin")]
         [HttpPost, ActionName("DeleteAll")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteAll()

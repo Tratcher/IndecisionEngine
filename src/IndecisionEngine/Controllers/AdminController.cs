@@ -3,7 +3,7 @@ using Microsoft.AspNet.Mvc;
 
 namespace IndecisionEngine.Controllers
 {
-    [Authorize] // TODO: Admin
+    [Authorize("Admin")]
     public class AdminController : Controller
     {
         // GET: /<controller>/

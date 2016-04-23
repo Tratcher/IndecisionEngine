@@ -70,6 +70,16 @@
         }
     </ul>
     <hr />
+    <h4>Claims</h4>
+    <ul class="dl-horizontal">
+        @{
+            foreach (var claim in Model.Claims)
+            {
+                <li>@claim.Type: @claim.Value</li>
+            }
+        }
+    </ul>
+    <hr />
 </div>
 <p>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

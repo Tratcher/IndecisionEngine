@@ -56,7 +56,10 @@ namespace IndecisionEngine
 
             services.AddCaching();
             services.AddSession();
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
+            });
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 // options.SignIn.RequireConfirmedEmail = true;

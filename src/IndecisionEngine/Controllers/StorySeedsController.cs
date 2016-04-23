@@ -151,11 +151,22 @@ namespace IndecisionEngine.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize("Admin")]
         [HttpPost, ActionName("DeleteAll")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteAll()
         {
             _context.Database.ExecuteSqlCommand("delete from StorySeed");
+            return RedirectToAction("Index");
+        }
+
+        // You can end up here if you tried to DeleteAll without being logged in first.
+        // If you do have permissions after login you'll end up on the index page and can try again.
+        // Otherwise you'll end up on the /Account/AccessDenied page.
+        [Authorize("Admin")]
+        [HttpGet, ActionName("DeleteAll")]
+        public IActionResult DeleteAllLoginRedirect()
+        {
             return RedirectToAction("Index");
         }
     }

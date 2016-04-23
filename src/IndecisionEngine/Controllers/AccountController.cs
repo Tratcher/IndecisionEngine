@@ -447,6 +447,15 @@ namespace IndecisionEngine.Controllers
         }
 
         //
+        // GET: /Account/AccessDenied
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        //
         // POST: /Account/VerifyCode
         [HttpPost]
         [AllowAnonymous]
