@@ -97,7 +97,7 @@ namespace IndecisionEngine.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-        */
+
         //
         // GET: /Account/Register
         [HttpGet]
@@ -106,7 +106,7 @@ namespace IndecisionEngine.Controllers
         {
             return View();
         }
-        /*
+
         //
         // POST: /Account/Register
         [HttpPost]
@@ -170,6 +170,7 @@ namespace IndecisionEngine.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
         {
+            // TODO: Why is info.DisplayName null?
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {

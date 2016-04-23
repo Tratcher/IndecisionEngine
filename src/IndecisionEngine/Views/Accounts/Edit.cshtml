@@ -1,0 +1,80 @@
+@model IndecisionEngine.ViewModels.Accounts.AccountsDetailsViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <hr />
+        <h4>Account</h4>
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="DisplayName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DisplayName" class="form-control" />
+                <span asp-validation-for="DisplayName" class="text-danger" />
+            </div>
+            <label asp-for="UserName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger" />
+            </div>
+            <label asp-for="EmailConfirmed" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="EmailConfirmed" class="checkbox" />
+                <span asp-validation-for="EmailConfirmed" class="text-danger" />
+            </div>
+            <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger" />
+            </div>
+            <label asp-for="PhoneNumberConfirmed" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PhoneNumberConfirmed" class="checkbox" />
+                <span asp-validation-for="PhoneNumberConfirmed" class="text-danger" />
+            </div>
+            <label asp-for="TwoFactorEnabled" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TwoFactorEnabled" disabled class="checkbox" />
+            </div>
+            <label asp-for="LockoutEnabled" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LockoutEnabled" disabled class="checkbox" />
+            </div>
+            <label asp-for="LockoutEnd" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LockoutEnd" disabled class="form-control" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+    <hr />
+    <h4>Providers</h4>
+    <ul class="dl-horizontal">
+        @{
+            foreach (var provider in Model.Logins)
+            {
+                <li>@provider.LoginProvider</li>
+            }
+        }
+    </ul>
+    <hr />
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
