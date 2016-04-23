@@ -22,12 +22,14 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: /<controller>/
+        [HttpGet]
         public IActionResult Index()
         {
             return View(_userManager.Users);
         }
 
         // GET: /<controller>/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -51,6 +53,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: /<controller>/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -107,6 +110,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: /<controller>/Delete/5
+        [HttpGet]
         [ActionName("Delete")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -150,7 +154,7 @@ namespace IndecisionEngine.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ActionName("DeleteAll")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAll()
         {

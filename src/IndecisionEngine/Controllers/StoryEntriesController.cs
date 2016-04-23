@@ -19,12 +19,14 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryEntries
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.StoryEntry.ToListAsync());
         }
 
         // GET: StoryEntries/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,6 +44,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryEntries/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -62,6 +65,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryEntries/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,6 +97,7 @@ namespace IndecisionEngine.Controllers
 
         // GET: StoryEntries/Delete/5
         [ActionName("Delete")]
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,7 +126,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [Authorize("Admin")]
-        [HttpPost, ActionName("DeleteAll")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteAll()
         {

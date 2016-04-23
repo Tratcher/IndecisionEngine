@@ -19,6 +19,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult Start(int id)
         {
             var seed = _context.StorySeed.FirstOrDefault(s => s.Id == id);
@@ -32,6 +33,7 @@ namespace IndecisionEngine.Controllers
 
         // GET: StoryExplorer
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index(int? id)
         {
             if (!id.HasValue)
@@ -81,6 +83,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult History()
         {
             var seedId = HistoryHelper.GetSeedId(HttpContext);
@@ -103,6 +106,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult GoBack()
         {
             var historyEntry = HistoryHelper.GoBack(HttpContext);
@@ -122,6 +126,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult GoBackTo(int id)
         {
             var historyEntry = HistoryHelper.GoBackTo(HttpContext, id);
@@ -131,6 +136,7 @@ namespace IndecisionEngine.Controllers
             return RedirectToAction("Index", new { id = historyEntry.EndEntryId });
         }
 
+        [HttpGet]
         public IActionResult Graph(int? id)
         {
             if (!id.HasValue)
@@ -149,6 +155,7 @@ namespace IndecisionEngine.Controllers
             return View(graphModel);
         }
 
+        [HttpGet]
         public IActionResult NewTransition(int? id)
         {
             if (ModelState.IsValid)
@@ -167,6 +174,7 @@ namespace IndecisionEngine.Controllers
             return new HttpStatusCodeResult(400);
         }
 
+        [HttpGet]
         public IActionResult EditTransition(int? id)
         {
             if (id == null)

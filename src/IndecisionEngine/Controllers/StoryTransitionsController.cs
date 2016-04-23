@@ -19,6 +19,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryTransitions
+        [HttpGet]
         public IActionResult Index()
         {
             var viewModel = new StoryTransitionsIndexViewModel()
@@ -32,6 +33,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryTransitions/Details/5
+        [HttpGet]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -56,6 +58,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryTransitions/Create
+        [HttpGet]
         public IActionResult Create()
         {
             var viewModel = new StoryTransitionViewModel()
@@ -82,6 +85,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StoryTransitions/Edit/5
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -120,6 +124,7 @@ namespace IndecisionEngine.Controllers
 
         // GET: StoryTransitions/Delete/5
         [ActionName("Delete")]
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -155,7 +160,7 @@ namespace IndecisionEngine.Controllers
         }
 
         [Authorize("Admin")]
-        [HttpPost, ActionName("DeleteAll")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteAll()
         {

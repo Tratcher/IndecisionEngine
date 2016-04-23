@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,7 +12,9 @@ using IndecisionEngine.Services;
 using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,6 +91,7 @@ namespace IndecisionEngine
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseRuntimeInfoPage("/runtime");
+                AuditMvc(app);
             }
             else
             {
@@ -211,6 +216,57 @@ namespace IndecisionEngine
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+        }
+
+        // http://stackoverflow.com/a/30969888/2588374
+        private void AuditMvc(IApplicationBuilder app)
+        {
+            app.Use(async (context, next) =>
+            {
+                if (!context.Request.Path.StartsWithSegments("/audit-mvc"))
+                {
+                    await next();
+                    return;
+                }
+
+                var asm = typeof(Startup).GetTypeInfo().Assembly;
+
+                var controllerlist = asm.GetTypes()
+                        .Where(type => typeof(Controller).IsAssignableFrom(type))
+                        .Select(x => new
+                        {
+                            Controller = x,
+                            Attributes = x.GetTypeInfo().CustomAttributes
+                                .OrderBy(a => a.AttributeType.Name)
+                                .Select(a =>
+                                    a.AttributeType.Name.Replace("Attribute",
+                                    $"({String.Join(",", a.ConstructorArguments.Select(arg => arg.Value))})"))
+                        })
+                        .OrderBy(x => x.Controller.Name).ToList();
+
+                foreach (var entry in controllerlist)
+                {
+                    await context.Response.WriteAsync($"{entry.Controller.Name}: {String.Join(",", entry.Attributes)}\r\n");
+
+                    var actionlist = entry.Controller
+                            .GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public)
+                            .Select(x => new {
+                                Action = x.Name,
+                                Attributes = x.CustomAttributes.Where(a =>
+                                    !string.Equals(a.AttributeType.Name, "AsyncStateMachineAttribute")
+                                        && !string.Equals(a.AttributeType.Name, "DebuggerStepThroughAttribute"))
+                                    .OrderBy(a => a.AttributeType.Name)
+                                    .Select(a => a.AttributeType.Name.Replace("Attribute",
+                                        $"({String.Join(",", a.ConstructorArguments.Select(arg => arg.Value))})"))
+                            })
+                            .OrderBy(x => x.Action).ToList();
+
+                    foreach (var action in actionlist)
+                    {
+                        await context.Response.WriteAsync($"- {action.Action}: {String.Join(",", action.Attributes)}\r\n");
+                    }
+                }
             });
         }
 

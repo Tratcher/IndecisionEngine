@@ -20,6 +20,7 @@ namespace IndecisionEngine.Controllers
 
         // GET: StorySeeds
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
             var viewModel = new StorySeedsIndexViewModel()
@@ -32,6 +33,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StorySeeds/Details/5
+        [HttpGet]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -54,6 +56,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StorySeeds/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View(new StorySeedViewModel() { Entries = _context.StoryEntry });
@@ -82,6 +85,7 @@ namespace IndecisionEngine.Controllers
         }
 
         // GET: StorySeeds/Edit/5
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -119,6 +123,7 @@ namespace IndecisionEngine.Controllers
 
         // GET: StorySeeds/Delete/5
         [ActionName("Delete")]
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
             if (id == null)
