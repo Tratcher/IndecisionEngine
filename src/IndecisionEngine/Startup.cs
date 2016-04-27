@@ -10,11 +10,15 @@ using System.Text;
 using IndecisionEngine.Models;
 using IndecisionEngine.Services;
 using Microsoft.AspNet.Authentication.Twitter;
+using Microsoft.AspNet.Authorization.Infrastructure;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Controllers;
+using Microsoft.AspNet.Mvc.Filters;
+using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,7 +84,7 @@ namespace IndecisionEngine
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IActionDescriptorsCollectionProvider actionDescriptor)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -91,7 +95,7 @@ namespace IndecisionEngine
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseRuntimeInfoPage("/runtime");
-                AuditMvc(app);
+                AuditMvc(app, actionDescriptor);
             }
             else
             {
@@ -220,7 +224,7 @@ namespace IndecisionEngine
         }
 
         // http://stackoverflow.com/a/30969888/2588374
-        private void AuditMvc(IApplicationBuilder app)
+        private void AuditMvc(IApplicationBuilder app, IActionDescriptorsCollectionProvider actionDescriptor)
         {
             app.Use(async (context, next) =>
             {
@@ -230,6 +234,40 @@ namespace IndecisionEngine
                     return;
                 }
 
+                // Official way:
+                await context.Response.WriteAsync($"Action Descriptors:");
+                foreach (ControllerActionDescriptor descriptor in actionDescriptor.ActionDescriptors.Items)
+                {
+                    await context.Response.WriteAsync($"{descriptor.ControllerName}.{descriptor.Name}: ");
+                    foreach (var filterDescriptor in descriptor.FilterDescriptors)
+                    {
+                        if (filterDescriptor.Filter is AuthorizeFilter)
+                        {
+                            var authorizeFilter = filterDescriptor.Filter as AuthorizeFilter;
+                            foreach (var requirement in authorizeFilter.Policy.Requirements)
+                            {
+                                if (requirement is DenyAnonymousAuthorizationRequirement)
+                                {
+                                    await context.Response.WriteAsync($"DenyAnonymous");
+                                }
+                                else if (requirement is ClaimsAuthorizationRequirement)
+                                {
+                                    var claimsRequirement = requirement as ClaimsAuthorizationRequirement;
+                                    await context.Response.WriteAsync($"Claims Requirement: {claimsRequirement.ClaimType}: {string.Join(",", claimsRequirement.AllowedValues)}");
+                                }
+                                else
+                                {
+                                    await context.Response.WriteAsync($" {requirement}");
+                                }
+                            }
+                        }
+                    }
+                    await context.Response.WriteAsync($"\r\n");
+                }
+
+                await context.Response.WriteAsync($"\r\n\r\n");
+
+                // Common way:
                 var asm = typeof(Startup).GetTypeInfo().Assembly;
 
                 var controllerlist = asm.GetTypes()
