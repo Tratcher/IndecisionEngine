@@ -1,10 +1,10 @@
 using System.Linq;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.StoryTransitions;
-using Microsoft.AspNet.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IndecisionEngine.Controllers
 {
@@ -38,13 +38,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryTransition storyTransition = _context.StoryTransition.Single(m => m.Id == id);
             if (storyTransition == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StoryTransitionViewModel(storyTransition)
@@ -90,13 +90,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryTransition storyTransition = _context.StoryTransition.Single(m => m.Id == id);
             if (storyTransition == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StoryTransitionViewModel(storyTransition)
@@ -129,13 +129,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryTransition storyTransition = _context.StoryTransition.Single(m => m.Id == id);
             if (storyTransition == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StoryTransitionViewModel(storyTransition)

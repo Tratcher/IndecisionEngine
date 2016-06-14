@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.Accounts;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace IndecisionEngine.Controllers
@@ -34,13 +34,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             
             var viewModel = new AccountsDetailsViewModel(user)
@@ -58,13 +58,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             var viewModel = new AccountsDetailsViewModel(user)
             {
@@ -85,7 +85,7 @@ namespace IndecisionEngine.Controllers
                 user = await _userManager.FindByIdAsync(viewModel.Id);
                 if (user == null)
                 {
-                    return HttpNotFound();
+                    return NotFound();
                 }
                 user.DisplayName = viewModel.DisplayName;
                 user.UserName = viewModel.UserName;
@@ -99,7 +99,7 @@ namespace IndecisionEngine.Controllers
             user = await _userManager.FindByIdAsync(viewModel.Id);
             if (user == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             viewModel = new AccountsDetailsViewModel(user)
             {
@@ -116,13 +116,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             var viewModel = new AccountsDetailsViewModel(user)
             {

@@ -7,19 +7,21 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using IndecisionEngine.Models;
 using IndecisionEngine.Services;
-using Microsoft.AspNet.Authentication.Twitter;
-using Microsoft.AspNet.Authorization.Infrastructure;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Controllers;
-using Microsoft.AspNet.Mvc.Filters;
-using Microsoft.AspNet.Mvc.Infrastructure;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Authentication.Twitter;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -34,7 +36,8 @@ namespace IndecisionEngine
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
@@ -54,15 +57,14 @@ namespace IndecisionEngine
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             // Add framework services.
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]))
+            services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(connectionString))
                 .AddDbContext<StoryDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+                    options.UseSqlServer(connectionString));
 
-            services.AddCaching();
+            // services.AddCaching();
             services.AddSession();
             services.AddAuthorization(options =>
             {
@@ -80,42 +82,28 @@ namespace IndecisionEngine
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.Configure<AuthMessageSenderOptions>(options => Configuration.Bind(options));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IActionDescriptorsCollectionProvider actionDescriptor)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IActionDescriptorCollectionProvider actionDescriptor)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseRuntimeInfoPage("/runtime");
+                app.UseBrowserLink();
                 AuditMvc(app, actionDescriptor);
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-
-                // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
-                try
-                {
-                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                        .CreateScope())
-                    {
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                             .Database.Migrate();
-                    }
-                }
-                catch { }
             }
-
-            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
-
+            
             app.UseStaticFiles();
             app.UseSession();
 
@@ -126,30 +114,27 @@ namespace IndecisionEngine
             // Add and configure the options for authentication middleware to the request pipeline.
             // You can add options for middleware as shown below.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            app.UseFacebookAuthentication(options =>
+            app.UseFacebookAuthentication(new FacebookOptions()
             {
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                // TODO: remove e-mail workaround. https://github.com/aspnet/Security/issues/620#issuecomment-165464501
-                options.UserInformationEndpoint = "https://graph.facebook.com/me?fields=email,name";
-                options.Scope.Add("email");
+                AppId = Configuration["Authentication:Facebook:AppId"],
+                AppSecret = Configuration["Authentication:Facebook:AppSecret"],
             });
-            app.UseGoogleAuthentication(options =>
+            app.UseGoogleAuthentication(new GoogleOptions()
             {
-                options.ClientId = Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                ClientId = Configuration["Authentication:Google:ClientId"],
+                ClientSecret = Configuration["Authentication:Google:ClientSecret"],
             });
             //app.UseMicrosoftAccountAuthentication(options =>
             //{
             //    options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
             //    options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
             //});
-            app.UseTwitterAuthentication(options =>
+            app.UseTwitterAuthentication(new TwitterOptions()
             {
-                options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+                ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"],
+                ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"],
                 // TODO: https://github.com/aspnet/Security/issues/765
-                options.Events = new TwitterEvents()
+                Events = new TwitterEvents()
                 {
                     OnCreatingTicket = async context =>
                     {
@@ -168,7 +153,7 @@ namespace IndecisionEngine
                         var parameterBuilder = new StringBuilder();
                         foreach (var authorizationKey in authorizationParts)
                         {
-                            parameterBuilder.AppendFormat("{0}={1}&", UrlEncoder.Default.UrlEncode(authorizationKey.Key), UrlEncoder.Default.UrlEncode(authorizationKey.Value));
+                            parameterBuilder.AppendFormat("{0}={1}&", UrlEncoder.Default.Encode(authorizationKey.Key), UrlEncoder.Default.Encode(authorizationKey.Value));
                         }
                         parameterBuilder.Length--;
                         var parameterString = parameterBuilder.ToString();
@@ -178,11 +163,11 @@ namespace IndecisionEngine
                         var canonicalizedRequestBuilder = new StringBuilder();
                         canonicalizedRequestBuilder.Append(HttpMethod.Get.Method);
                         canonicalizedRequestBuilder.Append("&");
-                        canonicalizedRequestBuilder.Append(UrlEncoder.Default.UrlEncode(resource_url));
+                        canonicalizedRequestBuilder.Append(UrlEncoder.Default.Encode(resource_url));
                         canonicalizedRequestBuilder.Append("&");
-                        canonicalizedRequestBuilder.Append(UrlEncoder.Default.UrlEncode(resource_query));
+                        canonicalizedRequestBuilder.Append(UrlEncoder.Default.Encode(resource_query));
                         canonicalizedRequestBuilder.Append("%26");
-                        canonicalizedRequestBuilder.Append(UrlEncoder.Default.UrlEncode(parameterString));
+                        canonicalizedRequestBuilder.Append(UrlEncoder.Default.Encode(parameterString));
 
                         var signature = ComputeSignature(context.Options.ConsumerSecret, context.AccessTokenSecret, canonicalizedRequestBuilder.ToString());
                         authorizationParts.Add("oauth_signature", signature);
@@ -192,7 +177,7 @@ namespace IndecisionEngine
                         foreach (var authorizationPart in authorizationParts)
                         {
                             authorizationHeaderBuilder.AppendFormat(
-                                "{0}=\"{1}\", ", authorizationPart.Key, UrlEncoder.Default.UrlEncode(authorizationPart.Value));
+                                "{0}=\"{1}\", ", authorizationPart.Key, UrlEncoder.Default.Encode(authorizationPart.Value));
                         }
                         authorizationHeaderBuilder.Length = authorizationHeaderBuilder.Length - 2;
 
@@ -212,7 +197,7 @@ namespace IndecisionEngine
                             identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String, "Twitter"));
                         }
                     },
-                };
+                }
             });
 
             app.UseMvc(routes =>
@@ -224,7 +209,7 @@ namespace IndecisionEngine
         }
 
         // http://stackoverflow.com/a/30969888/2588374
-        private void AuditMvc(IApplicationBuilder app, IActionDescriptorsCollectionProvider actionDescriptor)
+        private void AuditMvc(IApplicationBuilder app, IActionDescriptorCollectionProvider actionDescriptor)
         {
             app.Use(async (context, next) =>
             {
@@ -321,14 +306,11 @@ namespace IndecisionEngine
                 algorithm.Key = Encoding.ASCII.GetBytes(
                     string.Format(CultureInfo.InvariantCulture,
                         "{0}&{1}",
-                        UrlEncoder.Default.UrlEncode(consumerSecret),
-                        string.IsNullOrEmpty(tokenSecret) ? string.Empty : UrlEncoder.Default.UrlEncode(tokenSecret)));
+                        UrlEncoder.Default.Encode(consumerSecret),
+                        string.IsNullOrEmpty(tokenSecret) ? string.Empty : UrlEncoder.Default.Encode(tokenSecret)));
                 var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(signatureData));
                 return Convert.ToBase64String(hash);
             }
         }
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }

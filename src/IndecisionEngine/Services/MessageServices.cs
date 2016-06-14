@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 
 namespace IndecisionEngine.Services
 {
@@ -21,7 +21,7 @@ namespace IndecisionEngine.Services
         // https://app.sendgrid.com/
         public Task SendEmailAsync(string email, string subject, string message)
         {
-#if DNX451
+#if NET451
             // Plug in your email service here to send an email.
             var myMessage = new SendGrid.SendGridMessage();
             myMessage.AddTo(email);

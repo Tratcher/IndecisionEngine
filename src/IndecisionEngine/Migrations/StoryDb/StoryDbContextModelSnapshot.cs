@@ -1,8 +1,8 @@
-using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using IndecisionEngine.Models;
 
 namespace IndecisionEngine.Migrations.StoryDb
@@ -13,7 +13,7 @@ namespace IndecisionEngine.Migrations.StoryDb
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryChoice", b =>
@@ -24,6 +24,8 @@ namespace IndecisionEngine.Migrations.StoryDb
                     b.Property<string>("Body");
 
                     b.HasKey("Id");
+
+                    b.ToTable("StoryChoice");
                 });
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryEntry", b =>
@@ -34,6 +36,8 @@ namespace IndecisionEngine.Migrations.StoryDb
                     b.Property<string>("Body");
 
                     b.HasKey("Id");
+
+                    b.ToTable("StoryEntry");
                 });
 
             modelBuilder.Entity("IndecisionEngine.Models.StorySeed", b =>
@@ -48,6 +52,8 @@ namespace IndecisionEngine.Migrations.StoryDb
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
+
+                    b.ToTable("StorySeed");
                 });
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryTransition", b =>
@@ -66,6 +72,8 @@ namespace IndecisionEngine.Migrations.StoryDb
                     b.Property<int?>("PriorEntryId");
 
                     b.HasKey("Id");
+
+                    b.ToTable("StoryTransition");
                 });
         }
     }

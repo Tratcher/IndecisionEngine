@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using IndecisionEngine.Models;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace IndecisionEngine.Controllers
 {

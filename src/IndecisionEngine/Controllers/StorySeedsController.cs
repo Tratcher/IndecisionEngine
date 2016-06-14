@@ -2,9 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.StorySeeds;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndecisionEngine.Controllers
 {
@@ -38,13 +38,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StorySeed storySeed = _context.StorySeed.Single(m => m.Id == id);
             if (storySeed == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StorySeedViewModel(storySeed)
@@ -90,13 +90,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StorySeed storySeed = _context.StorySeed.Single(m => m.Id == id);
             if (storySeed == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StorySeedViewModel(storySeed)
@@ -128,13 +128,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StorySeed storySeed = _context.StorySeed.Single(m => m.Id == id);
             if (storySeed == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StorySeedViewModel(storySeed)

@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace IndecisionEngine.Migrations.StoryDb
 {
-    public partial class setup : Migration
+    public partial class Stories : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,7 @@ namespace IndecisionEngine.Migrations.StoryDb
                 {
                     table.PrimaryKey("PK_StoryChoice", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "StoryEntry",
                 columns: table => new
@@ -33,19 +34,22 @@ namespace IndecisionEngine.Migrations.StoryDb
                 {
                     table.PrimaryKey("PK_StoryEntry", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "StorySeed",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    StoryEntryId = table.Column<int>(nullable: true),
+                    FirstEntryId = table.Column<int>(nullable: true),
+                    InitialState = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StorySeed", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "StoryTransition",
                 columns: table => new
@@ -66,10 +70,17 @@ namespace IndecisionEngine.Migrations.StoryDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("StoryChoice");
-            migrationBuilder.DropTable("StoryEntry");
-            migrationBuilder.DropTable("StorySeed");
-            migrationBuilder.DropTable("StoryTransition");
+            migrationBuilder.DropTable(
+                name: "StoryChoice");
+
+            migrationBuilder.DropTable(
+                name: "StoryEntry");
+
+            migrationBuilder.DropTable(
+                name: "StorySeed");
+
+            migrationBuilder.DropTable(
+                name: "StoryTransition");
         }
     }
 }

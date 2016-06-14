@@ -1,9 +1,9 @@
 using System.Linq;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using IndecisionEngine.Models;
-using Microsoft.AspNet.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IndecisionEngine.Controllers
 {
@@ -30,13 +30,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryChoice storyChoice = _context.StoryChoice.Single(m => m.Id == id);
             if (storyChoice == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(storyChoice);
@@ -69,13 +69,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryChoice storyChoice = _context.StoryChoice.Single(m => m.Id == id);
             if (storyChoice == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(storyChoice);
         }
@@ -101,13 +101,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryChoice storyChoice = _context.StoryChoice.Single(m => m.Id == id);
             if (storyChoice == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(storyChoice);

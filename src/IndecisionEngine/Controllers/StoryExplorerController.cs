@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using IndecisionEngine.Models;
 using IndecisionEngine.ViewModels.StoryExplorer;
 using IndecisionEngine.ViewModels.StoryTransitions;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IndecisionEngine.Controllers
 {
@@ -79,7 +79,7 @@ namespace IndecisionEngine.Controllers
                 return RedirectToAction("Index", new { id = transition.NextEntryId });
             }
 
-            return new HttpStatusCodeResult(400);
+            return new StatusCodeResult(400);
         }
 
         [AllowAnonymous]
@@ -171,7 +171,7 @@ namespace IndecisionEngine.Controllers
                 return View("EditTransition", viewModel);
             }
 
-            return new HttpStatusCodeResult(400);
+            return new StatusCodeResult(400);
         }
 
         [HttpGet]
@@ -179,13 +179,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryTransition storyTransition = _context.StoryTransition.Single(m => m.Id == id);
             if (storyTransition == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var viewModel = new StoryTransitionViewModel(storyTransition)
@@ -238,7 +238,7 @@ namespace IndecisionEngine.Controllers
                 return RedirectToAction("Index", new { id = storyTransition.PriorEntryId });
             }
 
-            return new HttpStatusCodeResult(400);
+            return new StatusCodeResult(400);
         }
     }
 }

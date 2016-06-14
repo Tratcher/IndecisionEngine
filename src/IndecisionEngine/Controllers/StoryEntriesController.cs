@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using IndecisionEngine.Models;
-using Microsoft.AspNet.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IndecisionEngine.Controllers
 {
@@ -31,13 +31,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
             if (storyEntry == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(storyEntry);
@@ -70,13 +70,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
             if (storyEntry == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(storyEntry);
         }
@@ -102,13 +102,13 @@ namespace IndecisionEngine.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             StoryEntry storyEntry = await _context.StoryEntry.SingleAsync(m => m.Id == id);
             if (storyEntry == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(storyEntry);
