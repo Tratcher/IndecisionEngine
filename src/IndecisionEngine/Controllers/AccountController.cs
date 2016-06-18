@@ -252,8 +252,15 @@ namespace IndecisionEngine.Controllers
 
                         TODO: Redirect to a waiting-for-email-confirmation-page
 #else*/
+                        // Make the first user an admin
+                        if (_userManager.Users.Count() == 1)
+                        {
+                            result = await _userManager.AddClaimAsync(user, new Claim("Role", "Admin"));
+                        }
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
+
                         return RedirectToLocal(returnUrl);
 //#endif
                     }
