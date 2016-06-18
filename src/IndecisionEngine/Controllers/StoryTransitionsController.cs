@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class StoryTransitionsController : Controller
     {
         private StoryDbContext _context;

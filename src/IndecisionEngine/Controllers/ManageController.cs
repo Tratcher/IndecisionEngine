@@ -14,6 +14,7 @@ using IndecisionEngine.ViewModels.Manage;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

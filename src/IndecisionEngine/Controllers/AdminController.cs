@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IndecisionEngine.Controllers
 {
     [Authorize("Admin")]
+    [RequireHttps]
     public class AdminController : Controller
     {
         // GET: /<controller>/

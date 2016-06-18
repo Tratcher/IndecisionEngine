@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace IndecisionEngine.Controllers
 {
     [Authorize("Admin")]
+    [RequireHttps]
     public class AccountsController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class StoryExplorerController : Controller
     {
         private StoryDbContext _context;

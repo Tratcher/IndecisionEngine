@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class StorySeedsController : Controller
     {
         private StoryDbContext _context;

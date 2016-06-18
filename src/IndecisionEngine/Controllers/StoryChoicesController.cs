@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class StoryChoicesController : Controller
     {
         private StoryDbContext _context;

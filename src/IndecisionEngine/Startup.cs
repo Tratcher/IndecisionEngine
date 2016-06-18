@@ -77,7 +77,10 @@ namespace IndecisionEngine
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.SslPort = 44357;
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();

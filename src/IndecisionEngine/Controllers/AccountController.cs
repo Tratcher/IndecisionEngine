@@ -15,7 +15,7 @@ using IndecisionEngine.ViewModels.Account;
 namespace IndecisionEngine.Controllers
 {
     [Authorize]
-    // [RequireHttps] TODO: Broken in RC1
+    [RequireHttps]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
