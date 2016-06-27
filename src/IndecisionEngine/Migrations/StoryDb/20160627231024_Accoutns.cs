@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace IndecisionEngine.Migrations.StoryDb
 {
-    public partial class Stories : Migration
+    public partial class Accoutns : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

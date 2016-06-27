@@ -8,13 +8,13 @@ using IndecisionEngine.Models;
 namespace IndecisionEngine.Migrations.StoryDb
 {
     [DbContext(typeof(StoryDbContext))]
-    [Migration("20160614034839_Stories")]
-    partial class Stories
+    [Migration("20160627231024_Accoutns")]
+    partial class Accoutns
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
+                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IndecisionEngine.Models.StoryChoice", b =>
